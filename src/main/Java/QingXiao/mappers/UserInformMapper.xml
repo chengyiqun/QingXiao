@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QingXiao.mappers.UserInformMapper">
+    <resultMap type="QingXiao.entity.UserInform" id="UserInformMapper">
+        <id property="userID" column="user_id" />
+        <result property="userName" column="user_name" />
+        <result property="password" column="password" />
+    </resultMap>
+
+    <resultMap type="QingXiao.entity.UserInform" id="avatarMap">
+        <id property="userID" column="user_id" />
+        <result property="avatarStoreName" column="avatar_store_name" />
+        <result property="avatarRealName" column="avatar_real_name" />
+    </resultMap>
+
+    <!-- 使用resultMap映射实体类和字段之间的一一对应关系,ReplyMap  -->
+    <resultMap type="QingXiao.entity.UserInform" id="UserInformMapper2">
+        <id property="userID" column="user_id"/>
+        <result property="studentID" column="student_id"/>
+        <result property="avatar" column="avatar"/>
+        <result property="sex" column="sex"/>
+        <result property="access_token" column="access_token"/>
+        <result property="userIntroduction" column="user_introduction"/>
+    </resultMap>
+
+    <!-- 此处select标签的id值对应Mapper类中方法名 -->
+    <select id="getUserByName" parameterType="string" resultType="QingXiao.entity.UserInform">
+        select * from user_inform where user_name = #{userName}
+    </select>
+
+    <select id="getUserByPhoneNum" parameterType="string" resultType="QingXiao.entity.UserInform" resultMap="UserInformMapper2">
+        select * from user_inform where phone_num = #{phoneNum}
+    </select>
+
+    <select id="queryUserIDByUserName" parameterType="string" resultType="java.lang.String">
+        select user_id from user_inform where user_name = #{userName} or phone_num = #{userName}
+    </select>
+    <select id="queryPasswordByUserID" parameterType="java.lang.String" resultType="java.lang.String">
+        select password from user_inform where user_id= #{userID}
+    </select>
+
+    <select id="queryUserIDByPhoneNum" parameterType="java.lang.String" resultType="java.lang.String">
+        select user_id from user_inform where phone_num= #{phoneNum}
+    </select>
+
+    <select id="findAll" resultMap="UserInformMapper">
+        select * from user_inform;
+    </select>
+
+    <insert id="insertUser" parameterType="QingXiao.entity.UserInform">
+        insert into user_inform (user_id,user_name,password) values (#{userID},#{userName},#{password})
+    </insert>
+    <insert id="insertUserAuto" parameterType="QingXiao.entity.UserInform" useGeneratedKeys="true" keyProperty="id">
+        insert into user_inform(user_name,password) values(#{userName},#{password})
+    </insert>
+
+    <insert id="insertUserAllMap" parameterType="java.util.HashMap">
+       insert into user_inform (user_id,student_id,real_name,user_name,
+avatar,password,phone_num,tel,email,qq,sex,
+department,grade,entrance_date,user_introduction,register_time,status
+,access_token,expires_in,refresh_token,avatar_store_name,avatar_real_name)
+values (#{userID},#{studentID},#{realName},#{userName},
+#{avatar},#{password},#{phoneNum},#{tel},#{email},#{qq},#{sex},
+#{department},#{grade},#{entranceTime},#{userIntroduction },#{registerTime},#{status}
+,#{access_token},#{expires_in},#{refresh_token},#{avatarStoreName},#{avatarRealName})
+    </insert>
+    <insert id="insertUserAll" parameterType="QingXiao.entity.UserInform">
+        insert into user_inform  values (#{id },#{ stuffNo },#{ stuffPassword },#{ stuffName },
+        #{ stuffSex },#{ stuffAge },#{ stuffId },#{ stuffTel },#{ stuffWorkplace },#{ stuffPost },
+        #{ stuffEmail },#{ stuffStatus },#{ stuffAddress },#{ recordCreator },#{ recordCreateTime })
+    </insert>
+
+    <delete id="deleteUser" parameterType="java.lang.String" >
+        update user_inform  set status = 0 where user_id= #{userID}
+    </delete>
+
+    <update id="updatePassword" parameterType="java.lang.String" >
+        update  user_inform set password = #{password} where user_id= #{userID}
+    </update>
+
+    <update id="updateAccessToken" parameterType="java.util.HashMap" >
+        update user_inform set access_token = #{accessToken} ,  expires_in = #{expiresIn} where user_id= #{userID}
+    </update>
+
+    <select id="selectAccessTokenByUserID" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT access_token FROM  user_inform   where user_id= #{userID}
+    </select>
+
+
+    <update id="updateExpiresIn" parameterType="java.util.Date" >
+        update user_inform set expires_in = #{expiresIn} where user_id= #{userID}
+    </update>
+
+    <update id="updateAvatar" parameterType="java.lang.String" >
+    update user_inform set avatar = #{avatar} where user_name= #{userName}
+</update>
+
+    <update id="updateAvatarByUserName" parameterType="java.lang.String" >
+        update user_inform set avatar = #{avatar} where user_name= #{userName}
+    </update>
+
+    <update id="updateAvatarName" parameterType="java.lang.String" >
+        update user_inform set avatar_store_name = #{avatarStoreName} ,
+        avatar_real_name = #{avatarRealName} where user_name= #{userName}
+    </update>
+
+    <select id="selectAvatarName" parameterType="java.lang.String" resultType="java.util.HashMap">
+        SELECT avatar,avatar_store_name,avatar_real_name FROM  user_inform   where user_name= #{userName}
+    </select>
+
+
+
+</mapper>
+

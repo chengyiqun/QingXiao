@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QingXiao.mappers.ResourceDownloadInformMapper">
+
+    <insert id="insertResourceDownloadInform" parameterType="java.util.HashMap">
+        insert into resource_download_inform (resource_download_id,course_resource_id,user_id,download_time,status)
+         values(#{resourceDownloadID},#{courseResourceID},#{userID},#{downloadTime},#{status})
+    </insert>
+
+
+    <select id="getDownloadNumByResourceID" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT  COUNT(*) resourceDownloadNum FROM  resource_download_inform   where course_resource_id= #{courseResourceID}
+    </select>
+
+    <select id="getDownloadNumByUserID" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT  COUNT(*) resourceDownloadNum FROM  resource_download_inform   where user_id= #{userID}
+    </select>
+
+</mapper>

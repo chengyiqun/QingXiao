@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QingXiao.mappers.SubjectMapper">
+    <!--变量顺序要和数据库的一致-->
+    <insert id="insertSubject" parameterType="java.util.HashMap">
+        insert into subject  (subject_id,creator_id,
+       create_time,
+        content,subject_type,topics,Image,status)
+        values (#{subjectID},#{creatorID},
+        #{createTime},
+        #{content},#{subjectType},#{topics},#{Image},#{status})
+    </insert>
+    <!--更新主题的动态数-->
+    <update id="updateTopics" parameterType="java.lang.String" >
+        UPDATE subject SET  topics =subject.topics+1   where subject_id= #{subjectID}
+    </update>
+
+
+    <!--通过UserID查询某个用户创建的话题 -->
+    <select id="selectSubjectByUserID" parameterType="java.lang.String" resultType="java.util.HashMap">
+        SELECT * FROM  subject   where creator_id = #{userID} and create_time BETWEEN #{sinceTime} and  #{nowTime}
+    </select>
+
+
+
+    <select id="selectSubjectList" parameterType="java.lang.String" resultType="java.util.HashMap">
+        SELECT rc1.resource_comment_id,rc1.comment_type,rc1.comment_time,u1.user_name ,
+        rc1.user_id
+        ,rc1.reply_times,rc1.like_times,rc1.share_times
+        ,rc1.content
+        FROM  resource_comment as rc1,
+        course_resource,user_inform u1
+        where resource_store_name= #{resourceStoreName}
+        and rc1.user_id=u1.user_id
+        and course_resource.course_resource_id =rc1.course_resource_id
+        and comment_time BETWEEN #{sinceTime} and  #{nowTime}
+    </select>
+
+    <select id="selectSubjectTopicList" parameterType="java.lang.String" resultType="java.util.HashMap">
+        SELECT rc1.resource_comment_id,rc1.comment_type,rc1.comment_time,
+        u1.user_name as replyUserName,
+        rc1.to_user_id,u2.user_name as toUsername,rc1.user_id
+        ,rc1.reply_times,rc1.like_times,rc1.share_times
+        ,rc1.content,rc2.content as replyedContent
+        FROM  resource_comment as rc1,resource_comment as rc2,
+        user_inform u1,user_inform u2
+        where rc1.root_comment= #{rootComment}
+        and rc1.user_id=u1.user_id and rc1.to_user_id=u2.user_id
+        and  rc1.object_id=rc2.resource_comment_id
+    </select>
+
+
+
+    <select id="selectResourceComment" parameterType="java.lang.String" resultMap="ResourceCommentMap">
+        SELECT *  FROM  resource_comment,course_resource,user_inform   where resource_store_name= #{resourceStoreName} and resource_comment.user_id=user_inform.user_id
+    </select>
+    <!-- 使用resultMap映射实体类和字段之间的一一对应关系 -->
+    <resultMap type="QingXiao.entity.CourseResource" id="ResourceCommentMap">
+        <id property="courseResourceID" column="course_resource_id"/>
+        <result property="uploadTime" column="upload_time"/>
+        <result property="fileName" column="file_name"/>
+
+        <collection property="resourceCommentList" ofType="QingXiao.entity.ResourceComment">
+            <id property="resourceCommentID" column="resource_comment_id"/>
+            <result property="courseResourceID" column="course_resource_id"/>
+            <result property="userID" column="user_id"/>
+            <result property="content" column="content"/>
+            <result property="commentTime" column="comment_time"/>
+            <result property="score" column="score"/>
+            <association property="userInform"  javaType="QingXiao.entity.UserInform">
+                <id property="userID" column="user_id"/>
+                <result property="userName" column="user_name"/>
+            </association>
+        </collection>
+    </resultMap>
+
+</mapper>

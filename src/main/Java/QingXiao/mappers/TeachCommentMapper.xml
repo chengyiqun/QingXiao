@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QingXiao.mappers.TeachCommentMapper">
+    <!--变量顺序要和数据库的一致-->
+    <insert id="insertTeachCommentAllMap" parameterType="java.util.HashMap">
+        insert into teach_comment(teach_comment_id,teach_id,user_id,
+        comment_type,root_comment,object_id,to_user_id,score,
+        reply_times,content,comment_time,is_anonymous,status)
+      values (#{teachCommentID},#{teachID},#{userID},
+          #{commentType},#{rootComment},#{objectID},#{toUserID},#{score},
+        #{replyTimes},#{content},#{commentTime},#{isAnonymous},#{status})
+    </insert>
+
+
+    <select id="selectTeachCommentList" parameterType="java.lang.String" resultType="java.util.HashMap">
+        SELECT tc1.teach_comment_id,tc1.comment_type,tc1.comment_time,u1.user_name ,
+        tc1.user_id
+        ,tc1.reply_times,tc1.like_times,tc1.share_times
+        ,tc1.content
+        FROM  teach_comment as tc1,
+        teach_inform,user_inform u1
+        where tc1.teach_id= #{teachID}
+        and tc1.user_id=u1.user_id
+        and tc1.teach_id=teach_inform.teach_id
+        and comment_time BETWEEN #{sinceTime} and  #{nowTime}
+    </select>
+
+    <select id="selectTeachCommentReplyList" parameterType="java.lang.String" resultType="java.util.HashMap">
+        SELECT tc1.teach_comment_id,tc1.comment_type,tc1.comment_time,
+        u1.user_name as replyUserName,
+        tc1.to_user_id,u2.user_name as toUsername,tc1.user_id
+        ,tc1.reply_times,tc1.like_times,tc1.share_times
+        ,tc1.content,tc2.content as replyedContent
+        FROM  teach_comment as tc1,teach_comment as tc2,
+        user_inform u1,user_inform u2
+        where tc1.root_comment= #{rootComment}
+        and tc1.user_id=u1.user_id and tc1.to_user_id=u2.user_id
+        and  tc1.object_id=tc2.teach_comment_id
+    </select>
+
+    <!--更新资源评论的回复数-->
+    <update id="updateTeachCommentReplys" parameterType="java.lang.String" >
+        UPDATE teach_comment SET  reply_times =reply_times+1   where teach_comment_id= #{rootComment}
+    </update>
+    <!--获取回复的根评论-->
+    <select id="selectRootComment" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT  root_comment  FROM  teach_comment  where teach_comment_id= #{objectID}
+    </select>
+
+
+    <!--获取教学实体评价信息, 直接通过teachID确定-->
+    <select id="selectTeachCommentByTeach" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT *  FROM  teach_comment   where teach_id= #{teachID}
+    </select>
+
+    <!--通过教师的姓名，查询某个老师的评价， TeacherInform， TeachInform 联合查询-->
+    <select id="selectTeachCommentByTeacherName" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT teacher_id  FROM  teach_comment   where teacherName= #{teacherName}
+    </select>
+
+    <update id="updateTeachComments" parameterType="java.lang.String" >
+        UPDATE teach_inform SET  comment_times =teach_inform.comment_times+1   where teach_id= #{teachID}
+    </update>
+
+</mapper>

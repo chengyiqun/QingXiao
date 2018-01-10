@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QingXiao.mappers.ResourceCommentMapper">
+    <!--变量顺序要和数据库的一致-->
+    <insert id="insertResourceComment" parameterType="java.util.HashMap">
+        insert into resource_comment  (resource_comment_id,course_resource_id,
+        comment_type,root_comment,
+        object_id,to_user_id,user_id,comment_time,
+       content,score,status)
+       values (#{resourceCommentID},#{courseResourceID},
+       #{commentType},#{rootComment},
+       #{objectID},#{toUserID},#{userID},#{commentTime},
+       #{content},#{score},#{status})
+    </insert>
+    <!--更新资源评论的回复数-->
+    <update id="updateResourceCommentReplys" parameterType="java.lang.String" >
+        UPDATE resource_comment SET  reply_times =reply_times+1   where resource_comment_id= #{resourceCommentID}
+    </update>
+    <!--获取回复的根评论-->
+    <select id="selectRootComment" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT  root_comment  FROM  resource_comment   where resource_comment_id= #{objectID}
+    </select>
+
+    <!--获取课程资源实体评价信息, 直接通过courseResourceID确定,同时还要把userID转换成userName-->
+    <select id="selectResourceCommentByResourceID" parameterType="java.lang.String" resultType="java.util.HashMap">
+        SELECT  comment_time,content,score  FROM  resource_comment   where course_resource_id= #{courseResourceID} and comment_time BETWEEN #{sinceTime} and  #{nowTime}
+    </select>
+
+    <!--通过UserID查询某个用户对课程资源实体的评价 -->
+    <select id="selectResourceCommentByUserID" parameterType="java.lang.String" resultType="java.util.HashMap">
+        SELECT * FROM  resource_comment   where user_id= #{userID} and comment_time BETWEEN #{sinceTime} and  #{nowTime}
+    </select>
+
+
+
+    <select id="selectResourceCommentMapList" parameterType="java.lang.String" resultType="java.util.HashMap">
+    SELECT rc1.resource_comment_id,rc1.comment_type,rc1.comment_time,u1.user_name ,
+    rc1.user_id
+    ,rc1.reply_times,rc1.like_times,rc1.share_times
+    ,rc1.content
+    FROM  resource_comment as rc1,
+    course_resource,user_inform u1
+    where resource_store_name= #{resourceStoreName}
+    and rc1.user_id=u1.user_id
+    and course_resource.course_resource_id =rc1.course_resource_id
+    and comment_time BETWEEN #{sinceTime} and  #{nowTime}
+</select>
+
+    <select id="selectResourceCommentList" parameterType="java.lang.String" resultMap="CommentMap">
+         SELECT
+        rc1.user_id rc1_user_id,rc1.course_resource_id rc1_course_resource_id ,rc1.comment_time rc1_comment_time,
+        rc1.resource_comment_id rc1_comment_id,u1.user_name u1_username,
+        u2.user_name u2_username,rc1.like_times,rc1.share_times
+        ,rc1.content  rc1_content ,rc1.score  rc1_score ,
+        rc2.content rc1_to_content,  cr.user_id  cr_user_id ,
+        cr.course_id cr_course_id,cr.resource_describe cr_resource_describe,
+        cr.resource_path  cr_resource_path,cr.like_times cr_like_times
+        FROM  resource_comment as rc1,resource_comment as rc2,course_resource as cr,
+        user_inform u1,user_inform u2
+        where rc1.course_resource_id = #{courseResourceID}  and cr.course_resource_id = #{courseResourceID}
+        and rc1.object_id=rc2.resource_comment_id
+        and rc1.to_user_id = u2.user_id
+        and rc1.user_id=u1.user_id
+        and rc1.comment_time BETWEEN #{sinceTime} and  #{nowTime}
+
+    </select>
+    <!-- and rc1.comment_type = 1    #and rc1.object_id=rc2.resource_comment_id
+        #and rc1.to_user_id = u2.user_id-->
+    <!-- # 如果有此行，返回评论加回复；没有，只返回评论
+    <if test="rc1.object_id!=null and rc1.object!=''">
+            and  rc1.object_id=rc2.resource_comment_id
+        </if>
+
+        <if test="rc1.to_user_id !=null and rc1.to_user_id!=''">
+            and rc1.to_user_id = u2.user_id
+        </if>
+    -->
+    <select id="selectResourceCommentReply" parameterType="java.lang.String" resultMap="ReplyMap">
+        SELECT
+        rc1.user_id rc1_user_id,rc1.course_resource_id rc1_course_resource_id_id ,rc1.comment_time rc1_comment_time,
+        rc1.resource_comment_id rc1_comment_id,u1.user_name u1_username,
+        u2.user_name u2_username,rc1.like_times,rc1.share_times
+        ,rc1.content  rc1_content  ,rc2.content rc1_to_content,
+        rc3.reply_times rc3_reply_times,rc3.resource_comment_id rc3_comment_id,
+        rc3.content  rc3_content,rc3.comment_time  rc3_comment_time
+        FROM  resource_comment as rc1,resource_comment as rc2,resource_comment as rc3,
+        user_inform u1,user_inform u2
+        where rc1.root_comment= #{commentID}  and rc3.resource_comment_id = #{commentID}
+        and rc1.object_id=rc2.resource_comment_id
+        and rc1.user_id=u1.user_id  and rc1.to_user_id = u2.user_id
+        and rc1.comment_time BETWEEN #{sinceTime} and  #{nowTime}
+        and rc1.comment_type = 1
+    </select>
+
+    <select id="selectResourceCommentReplyList" parameterType="java.lang.String" resultType="java.util.HashMap">
+        SELECT rc1.resource_comment_id,rc1.comment_type,rc1.comment_time,
+        u1.user_name as replyUserName,
+        rc1.to_user_id,u2.user_name as toUsername,rc1.user_id
+        ,rc1.reply_times,rc1.like_times,rc1.share_times
+        ,rc1.content,rc2.content as replyedContent
+        FROM  resource_comment as rc1,resource_comment as rc2,
+        user_inform u1,user_inform u2
+        where rc1.root_comment= #{rootComment}
+        and rc1.user_id=u1.user_id and rc1.to_user_id=u2.user_id
+        and  rc1.object_id=rc2.resource_comment_id
+    </select>
+
+    <!-- 使用resultMap映射实体类和字段之间的一一对应关系 -->
+    <resultMap type="QingXiao.entity.CourseResource" id="ResourceCommentMap">
+        <id property="courseResourceID" column="course_resource_id"/>
+        <result property="uploadTime" column="upload_time"/>
+        <result property="fileName" column="file_name"/>
+
+        <collection property="resourceCommentList" ofType="QingXiao.entity.ResourceComment">
+            <id property="resourceCommentID" column="resource_comment_id"/>
+            <result property="courseResourceID" column="course_resource_id"/>
+            <result property="userID" column="user_id"/>
+            <result property="content" column="content"/>
+            <result property="commentTime" column="comment_time"/>
+            <result property="score" column="score"/>
+            <association property="userInform"  javaType="QingXiao.entity.UserInform">
+                <id property="userID" column="user_id"/>
+                <result property="userName" column="user_name"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <!-- 使用resultMap映射实体类和字段之间的一一对应关系,ReplyMap  -->
+    <resultMap type="QingXiao.entity.CourseResource" id="CommentMap">
+        <id property="courseResourceID" column="cr_course_resource_id"/>
+        <result property="likeTimes" column="cr_like_times"/>
+        <result property="courseID" column="cr_course_id"/>
+        <result property="userID" column="cr_user_id"/>
+        <result property="resourcePath" column="cr_resource_path"/>
+        <result property="commentTimes" column="cr_comment_times"/>
+        <result property="resourceDescribe" column="rc3_resource_describe"/>
+        <collection property="topicCommentList" ofType="QingXiao.entity.TopicComment">
+            <id property="commentID" column="rc1_comment_id"/>
+            <result property="topicID" column="rc1_course_resource_id"/>
+            <result property="userID" column="rc1_user_id"/>
+            <result property="userName" column="u1_username"/>
+            <result property="toUserName" column="u2_username"/>
+            <result property="content" column="rc1_content"/>
+            <result property="toContent" column="rc1_to_content"/>
+            <result property="commentTime" column="rc1_comment_time"/>
+            <result property="score" column="rc1_score"/>
+        </collection>
+    </resultMap>
+    <!-- 使用resultMap映射实体类和字段之间的一一对应关系,ReplyMap  -->
+    <resultMap type="QingXiao.entity.Reply" id="ReplyMap">
+        <id property="commentID" column="rc3_comment_id"/>
+        <result property="replyTimes" column="tc3_reply_times"/>
+        <result property="userName" column="u1_username"/>
+        <result property="topicID" column="rc3_topic_id"/>
+        <result property="userID" column="rc3_user_id"/>
+        <result property="content" column="rc3_content"/>
+        <result property="commentTime" column="rc3_comment_time"/>
+        <result property="score" column="rc3_score"/>
+        <collection property="topicCommentList" ofType="QingXiao.entity.TopicComment">
+            <id property="commentID" column="rc1_comment_id"/>
+            <result property="topicID" column="rc1_course_resource_id"/>
+            <result property="userID" column="rc1_user_id"/>
+            <result property="userName" column="u1_username"/>
+            <result property="toUserName" column="u2_username"/>
+            <result property="content" column="rc1_content"/>
+            <result property="toContent" column="rc1_to_content"/>
+            <result property="commentTime" column="rc1_comment_time"/>
+            <result property="score" column="rc1_score"/>
+        </collection>
+    </resultMap>
+
+</mapper>

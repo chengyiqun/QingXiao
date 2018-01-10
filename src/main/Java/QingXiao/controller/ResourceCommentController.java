@@ -1,0 +1,149 @@
+package QingXiao.controller;
+
+import QingXiao.entity.Reply;
+import QingXiao.service.ResourceCommentService;
+import QingXiao.service.TeachCommentService;
+import QingXiao.service.UserService;
+import com.alibaba.fastjson.JSON;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Created by xpb on 2017/10/28.
+ */
+@Controller
+@RequestMapping("/ResourceComment")
+public class ResourceCommentController {
+    @Resource
+    private ResourceCommentService resourceCommentService;
+    @Resource
+    private UserService userService;
+
+    private int result=0;
+    /*
+     插入课程资源评价实现，获取评价输入流，进行处理，返回结果。
+     同时资源评价数加1。
+     */
+    @RequestMapping(value = "/Insert",method= RequestMethod.POST)
+    @ResponseBody
+    public String insertTeachComment(HttpServletRequest req) throws Exception {
+        System.out.println("请求为" + req);
+        System.out.println("请求resourceCommentService为" +resourceCommentService);
+        BufferedReader br = req.getReader();
+        System.out.println("获取插入资源评论请求流："+br);
+        String str, jsonString = "";
+        while((str = br.readLine()) != null){
+            jsonString += str;
+            System.out.println("str为" + str);
+        }
+        System.out.println(jsonString);
+        System.out.println("插入资源评论请求为" + jsonString);
+        String userName=req.getHeader("userName");
+        userName= URLDecoder.decode(userName,"UTF-8");
+        String accessToken=req.getHeader("accessToken");
+        System.out.println("插入资源评论请求的用户为" + userName);
+
+        if(userService.verifyAccessToken(userName,accessToken)==4001) {
+            result= resourceCommentService.insertResourceComment(jsonString, userName);
+        } else {
+            //result=userService.verifyAccessToken(userName,accessToken);
+            result=3004;
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("result",result);
+
+        String result = JSON.toJSONString(map);
+        System.out.println("结果为" + result);
+        return result;
+    }
+
+    /*
+   *获取课程资源评价信息的list
+   */
+    @RequestMapping(value = "/GetCommentList",method= RequestMethod.POST)
+    @ResponseBody
+    public String  getResourceCommentList(HttpServletRequest request) throws IllegalStateException, IOException
+    {
+        System.out.println("课程资源评论list请求为" + request);
+        Map<String, Object> resultMap = new HashMap<>();
+        HashMap<String, Object> mapType = new HashMap<>();
+        BufferedReader br = request.getReader();
+
+        System.out.println("获取课程资源评论list请求流："+br);
+        String userName=request.getHeader("userName");
+        userName=URLDecoder.decode(userName,"UTF-8");
+        String accessToken=request.getHeader("accessToken");
+        System.out.println("获取课程资源评论list请求头信息userName："+userName);
+        System.out.println("获取课程资源评论list请求头信息accessToken："+accessToken);
+        String str, jsonString = "";
+        while((str = br.readLine()) != null){
+            jsonString += str;
+            System.out.println("str为" + str);
+        }
+        String  resultString ="";
+        System.out.println("111获取课程资源评论list请求流："+jsonString);
+        System.out.println("Token验证结果："+userService.verifyAccessToken(userName,accessToken));
+        if(userService.verifyAccessToken(userName,accessToken)==4001) {
+            List<Reply> list = resourceCommentService.getResourceCommentList(jsonString);
+            resultString = JSON.toJSONString(list);
+        }else{
+            result=3004;
+            // resultMap.put("result",3004);  //token验证失败，重新登录
+        }
+        resultMap.put("result",result);
+
+        System.out.println("result：" + resultString);
+        return resultString;
+    }
+
+    /*
+  *获取课程资源评论的回复信息的list
+  */
+    @RequestMapping(value = "/GetCommentReplyList",method= RequestMethod.POST)
+    @ResponseBody
+    public String  getResourceCommentReplyList(HttpServletRequest request) throws IllegalStateException, IOException
+    {
+        System.out.println("课程资源评论list请求为" + request);
+        Map<String, Object> resultMap = new HashMap<>();
+        HashMap<String, Object> mapType = new HashMap<>();
+        BufferedReader br = request.getReader();
+
+        System.out.println("获取课程资源评论list请求流："+br);
+        String userName=request.getHeader("userName");
+        userName=URLDecoder.decode(userName,"UTF-8");
+        String accessToken=request.getHeader("accessToken");
+        System.out.println("获取课程资源评论list请求头信息userName："+userName);
+        System.out.println("获取课程资源评论list请求头信息accessToken："+accessToken);
+        String str, jsonString = "";
+        while((str = br.readLine()) != null){
+            jsonString += str;
+            System.out.println("str为" + str);
+        }
+        String  resultString ="";
+        System.out.println("111获取课程资源评论list请求流："+jsonString);
+        System.out.println("Token验证结果："+userService.verifyAccessToken(userName,accessToken));
+        if(userService.verifyAccessToken(userName,accessToken)==4001) {
+            List<Reply> list = resourceCommentService.getResourceCommentReplyList(jsonString);
+            resultString = JSON.toJSONString(list);
+        }else{
+            result=3004;
+            // resultMap.put("result",3004);  //token验证失败，重新登录
+        }
+        resultMap.put("result",result);
+
+        System.out.println("result：" + resultString);
+        return resultString;
+    }
+
+}

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QingXiao.mappers.CourseMapper">
+
+    <insert id="insertCourseAllMap" parameterType="java.util.HashMap">
+        insert into course_inform (course_id,course_code,course_name,course_nature,
+        course_ascription,university_id,
+        credit,class_hours,status)
+        values  (#{courseID},#{courseCode},#{courseName},#{courseNature},
+        #{courseAscription},#{universityID},
+        #{credit},#{classHours},#{status})
+    </insert>
+
+    <select id="selectCourseIDByCourseName" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT course_id FROM  course_inform   where course_name= #{courseName}
+    </select>
+
+
+    <insert id="insertTeacherAllMap" parameterType="java.util.HashMap">
+        insert into teacher_inform (teacher_id,employee_number,teacher_name,department,
+        sex,birthday,teacher_email,teacher_tel,office,academic_title,
+        induction_time,brief_introduction,status) values (#{teacherID},#{employeeNumber},#{teacherName},#{department},
+        #{sex},#{birthday},#{teacherEmail},#{teacherTel},#{office},#{academicTitle},
+        #{inductionTime},#{briefIntroduction},#{status})
+    </insert>
+    <select id="selectTeacherIDByTeacherName" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT teacher_id FROM  teacher_inform   where teacher_name= #{teacherName}
+    </select>
+
+    <insert id="insertTeachAllMap" parameterType="java.util.HashMap">
+        insert into teach_inform (teach_id,teacher_id,course_id,comprehensive_score,
+        teach_time,start_date,comment_times,start_year,end_year,
+        semester,classroom,day_of_week,start_section,end_section
+        ,start_week,end_week,every_week,same_time,status) values (#{teachID},#{teacherID},#{courseID},#{comprehensiveScore},
+        #{teachTime},#{startDate},#{commentTimes},#{startYear},#{endYear},
+        #{semester},#{classroom},#{dayOfWeek},#{startSection},#{endSection}
+        ,#{startWeek},#{endWeek},#{everyWeek},#{sameTime},#{status})
+    </insert>
+    <!--教学实体检查通过教师ID，课程ID，时间确定唯一性。 -->
+    <select id="selectTeachID" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT teach_id FROM  teach_inform   where teacher_id= #{teacherID}
+        and course_id= #{courseID} and teach_time= #{teachTime}
+    </select>
+
+
+    <insert id="insertStudentCourseAllMap" parameterType="java.util.HashMap">
+        insert into student_course (student_course_id,teach_id,user_id,choose_course_date,
+        grade_point,resit_rebuild_tag,
+        score,status) values (#{studentCourseID},#{teachID},#{userID},#{chooseCourseTime},
+        #{gradePoint},#{resitRebuildTag},
+        #{score},#{status})
+    </insert>
+    <!--学生选课实体检查通过教学ID，用户ID确定唯一性。 -->
+    <select id="selectStudentCourseID" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT student_course_id FROM  student_course   where teach_id= #{teachID}
+        and user_id= #{userID}
+    </select>
+
+
+</mapper>
