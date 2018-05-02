@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="QingXiao:war exploded">
-    <output-path>$PROJECT_DIR$/target/QingXiao</output-path>
+    <output-path>E:/apache-tomcat-8.5.23/webapps/QingXiao</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">

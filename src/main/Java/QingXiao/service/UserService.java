@@ -23,7 +23,7 @@ public interface UserService {
 
     int verifyAccessToken(HashMap map);
 
-    int verifyAccessToken(String phoneNum, String accessToken);
+    int verifyAccessToken(String userName, String accessToken);
 
     //void updateAvatar(String avatar, String userID);
 

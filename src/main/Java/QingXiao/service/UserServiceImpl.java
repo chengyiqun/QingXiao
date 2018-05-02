@@ -171,7 +171,7 @@ public class UserServiceImpl implements UserService {
     public int verifyAccessToken(HashMap map) {
         String accessToken =(String) map.get( "accessToken");
         String userName =(String) map.get( "userName");
-        String userID= userInformMapper.queryUserIDByPhoneNum(userName);
+        String userID= userInformMapper.queryUserIDByUserName(userName);
         String accessTokenServer = userInformMapper.selectAccessTokenByUserID(userID);
         if(accessTokenServer.equals(accessToken)&&JwtHelper.isJwtValid(accessToken)){
             return result=4001;
@@ -184,8 +184,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int verifyAccessToken(String phoneNum, String accessToken) {
-        String userID= userInformMapper.queryUserIDByPhoneNum(phoneNum);
+    public int verifyAccessToken(String userName, String accessToken) {
+        String userID= userInformMapper.queryUserIDByUserName(userName);
         System.out.println(userID);
         String accessTokenServer = userInformMapper.selectAccessTokenByUserID(userID);
         System.out.println("accessTokenServer："+accessTokenServer);
@@ -208,13 +208,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateAvatar(String avatar, String phoneNum,String avatarRealName,String avatarStoreName) {
-       userInformMapper.updateAvatar(avatar,phoneNum);
-       userInformMapper.updateAvatarName(avatarStoreName,avatarRealName,phoneNum);
+    public void updateAvatar(String avatar, String userName,String avatarRealName,String avatarStoreName) {
+       userInformMapper.updateAvatar(avatar,userName);
+       userInformMapper.updateAvatarName(avatarStoreName,avatarRealName,userName);
     }
     @Override
     public HashMap downloadAvatar(String userName){
-        HashMap<String, Object> avatarMap = new HashMap<>();
+        HashMap avatarMap;
         avatarMap=userInformMapper.selectAvatarName(userName);
         return avatarMap;
     }

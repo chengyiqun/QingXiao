@@ -40,6 +40,7 @@ public class FileOperator {
         long fileLength = new File(downLoadPath).length();
 
         response.setContentType(contentType);
+        System.out.println("111realName3 "+realName);
         response.setHeader("Content-disposition",
                 "attachment; filename=" + new String(realName.getBytes("utf-8"), "ISO8859-1"));
         response.setHeader("Content-Length", String.valueOf(fileLength));

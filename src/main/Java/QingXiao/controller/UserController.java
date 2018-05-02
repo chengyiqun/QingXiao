@@ -301,8 +301,9 @@ public class UserController {
         String accessToken = request.getHeader("accessToken");
         HashMap avatarMap;
         avatarMap = userService.downloadAvatar(userName);
-        String avatarStoreName = (String) avatarMap.get("avatarStoreName");  //
-        String avatarRealName = (String) avatarMap.get("avatarRealName");
+        System.out.println("avatarMap"+avatarMap.toString());
+        String avatarStoreName = (String) avatarMap.get("avatar_store_name");  //
+        String avatarRealName = (String) avatarMap.get("avatar_real_name");
         String avatar = (String) avatarMap.get("avatar");
         String contentType = ".jpg";
 
@@ -314,11 +315,16 @@ public class UserController {
         }
         System.out.println("获取更改头像请求流：" + jsonString);
         if (userService.verifyAccessToken(userName, accessToken) == 4001) {
+            System.out.println("文件操作22");
+            System.out.println("realName1 "+avatarRealName);
             try {
+                System.out.println("realName2 "+avatarRealName);
                 FileOperator.download(request, response, avatarStoreName, contentType, avatarRealName, FileOperator.AVATAR);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else {
+            System.out.println("token验证失败12121");
         }
 
     }
