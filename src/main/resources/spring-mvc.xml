@@ -12,7 +12,7 @@
     <!-- 自动扫描  @Controller-->
     <context:component-scan base-package="QingXiao.controller"/>
     <!--避免IE执行AJAX时，返回JSON出现下载文件 -->
-    <bean id="mappingJacksonHttpMessageConverter"
+    <bean id="mappingJackson2HttpMessageConverter"
           class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
         <property name="supportedMediaTypes">
             <list>
@@ -22,13 +22,12 @@
     </bean>
 
 
-
-
     <!-- 启动SpringMVC的注解功能，完成请求和注解POJO的映射 -->
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+    <!--annotationmethodhandleradapter 替代类-->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">
             <list>
-                <ref bean="mappingJacksonHttpMessageConverter"/> <!-- JSON转换器 -->
+                <ref bean="mappingJackson2HttpMessageConverter"/> <!-- JSON转换器 -->
             </list>
         </property>
     </bean>

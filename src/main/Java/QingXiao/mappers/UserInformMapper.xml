@@ -15,13 +15,14 @@
         <result property="avatarRealName" column="avatar_real_name" />
     </resultMap>
 
-    <!-- 使用resultMap映射实体类和字段之间的一一对应关系,ReplyMap  -->
+    <!-- 使用resultMap映射实体类和字段之间的一一对应关系,UserInformMapper2  -->
     <resultMap type="QingXiao.entity.UserInform" id="UserInformMapper2">
         <id property="userID" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="realName" column="real_name"/>
+        <result property="avatarRealName" column="avatar_real_name"/>
+        <result property="avatarStoreName" column="avatar_store_name"/>
         <result property="studentID" column="student_id"/>
-        <result property="avatar" column="avatar"/>
-        <result property="sex" column="sex"/>
-        <result property="access_token" column="access_token"/>
         <result property="userIntroduction" column="user_introduction"/>
     </resultMap>
 
@@ -30,7 +31,8 @@
         select * from user_inform where user_name = #{userName}
     </select>
 
-    <select id="getUserByPhoneNum" parameterType="string" resultType="QingXiao.entity.UserInform" resultMap="UserInformMapper2">
+    <!--resultMap 和resultType不能并用-->
+    <select id="getUserByPhoneNum" parameterType="string" resultMap="UserInformMapper2">
         select * from user_inform where phone_num = #{phoneNum}
     </select>
 
@@ -94,7 +96,7 @@ values (#{userID},#{studentID},#{realName},#{userName},
     </update>
 
     <update id="updateAvatar" parameterType="java.lang.String" >
-    update user_inform set avatar = #{avatar} where user_name= #{userName}
+    update user_inform set avatar = #{avatar} where phone_num= #{phoneNum}
 </update>
 
     <update id="updateAvatarByUserName" parameterType="java.lang.String" >

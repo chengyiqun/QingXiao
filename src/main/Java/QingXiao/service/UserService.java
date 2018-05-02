@@ -12,18 +12,18 @@ public interface UserService {
 
     List<UserInform> findAll();
 
-    void updateAvatar(String avatar, String userID, String avatarRealName, String avatarStoreName);
+    void updateAvatar(String avatar, String phoneNum, String avatarRealName, String avatarStoreName);
 
     HashMap downloadAvatar(String userName);
 
     int deleteUser(String userName);
     int updatePassword(String userName, String password);
-    HashMap login(String userName, String passWord);
+    HashMap login(String phoneNum, String passWord);
     int register(HashMap infoMap);
 
     int verifyAccessToken(HashMap map);
 
-    int verifyAccessToken(String userName, String accessToken);
+    int verifyAccessToken(String phoneNum, String accessToken);
 
     //void updateAvatar(String avatar, String userID);
 

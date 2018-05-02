@@ -34,7 +34,7 @@ public interface UserInformMapper {
  void updateExpiresIn(@Param("expires_in")Date expiresIn,@Param("userID") String userID);
 
  void updateAccessToken(HashMap tokenMap);
- void  updateAvatar(@Param("avatar")String avatar,@Param("userName") String userName);
+ void  updateAvatar(@Param("avatar")String avatar,@Param("phoneNum") String phoneNum);
  void updateAvatarByUserName(@Param("avatar")String avatar,@Param("userName") String userName);
  String selectAccessTokenByUserID(@Param("userID") String userID);
 

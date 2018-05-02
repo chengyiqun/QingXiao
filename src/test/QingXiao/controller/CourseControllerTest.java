@@ -56,7 +56,7 @@ public class CourseControllerTest {
                                 //get("/user/showUser2")          //请求的url,请求的方法是get
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)//数据的格式
                                 .body(jsonStringInsertCourse.getBytes())
-                        .header("userName","admin1")
+                        .header("userName","hehehe")
                                 .header("accessToken",accessToken)
                         //  .param("userName","admin")   //添加参数(可以添加多个)
                         // .param("passWord","123")   //添加参数(可以添加多个)

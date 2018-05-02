@@ -66,7 +66,7 @@ public class CourseResourceControllerTest {
                                 //get("/user/showUser2")          //请求的url,请求的方法是get
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)//数据的格式
                                 .body(jsonStringUploadCourseResource.getBytes())
-                                .header("userName","admin1")
+                                .header("userName","hehehe")
                                 .header("accessToken",accessToken)
 
                         //  .param("userName","admin")   //添加参数(可以添加多个)
@@ -85,7 +85,7 @@ public class CourseResourceControllerTest {
         FileInputStream fis = new FileInputStream("C:\\Users\\Public\\Pictures\\5.jpg");
         MockMultipartFile file = new MockMultipartFile("file","5.jpg","image/jpeg",fis);
         FileInputStream fis2 = new FileInputStream("C:\\Users\\Public\\Pictures\\5.jpg");
-        MockMultipartFile file2 = new MockMultipartFile("file","5.jpg","image/jpeg",fis);
+        MockMultipartFile file2 = new MockMultipartFile("file","5.jpg","image/jpeg",fis2);
 
         MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest() ;
         request.addFile(file);
@@ -99,7 +99,7 @@ public class CourseResourceControllerTest {
         //request.addPart("name",new Part("中国心", Charset.forName("UTF-8")));
         //request.addPart(jsonStringUploadCourseResource);
         request.addHeader("accessToken",accessToken);
-        request.addHeader("userName","admin1");
+        request.addHeader("userName","hehehe");
         System.out.println("更改头像请求courseResourceController为" +courseResourceController);
         String jsonResultObject = courseResourceController.uploadCourseResource1(request);
        // System.out.println(jsonResultObject.getData());
@@ -119,7 +119,7 @@ public class CourseResourceControllerTest {
        // request.setContent(jsonStringDownloadCourseResource.getBytes()); //设置请求体
         //request.addPart(jsonStringUploadCourseResource);
         request.addHeader("accessToken",accessToken);
-        request.addHeader("userName","admin1");
+        request.addHeader("userName","hehehe");
 
         System.out.println("下载课程资源请求courseResourceController为" +courseResourceController);
         courseResourceController.downloadCourseResource(request,response);
@@ -141,7 +141,7 @@ public class CourseResourceControllerTest {
         request.setContent(jsonStringGetCourseResourceList.getBytes()); //设置请求体
         //request.addPart(jsonStringUploadCourseResource);
         request.addHeader("accessToken",accessToken);
-        request.addHeader("userName","admin1");
+        request.addHeader("userName","hehehe");
 
         System.out.println("获取课程资源list请求courseResourceController为" +courseResourceController);
          String result =courseResourceController.getCourseResourceList(request);

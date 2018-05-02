@@ -37,22 +37,23 @@ public class ResourceCommentControllerTest {
     @Autowired
     protected  ResourceCommentController resourceCommentController;
     @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     protected ResourceCommentMapper resourceCommentMapper;
 
     //private String jsonStringInsertResourceComment="{'resourceStoreName':'f2eafd3fd35e447499ab6d7fd23fb90d.jpg','score':90,'content':'很实用！！！','objectID':'','commentType':0}";
    // private String insertResourceCommentUrl="/ResourceComment/Insert";
     //private String jsonStringInsertResourceCommentReply="{'resourceStoreName':'f2eafd3fd35e447499ab6d7fd23fb90d.jpg','score':90,'content':'很实用！！！','objectID':'8d06d45cc5954c84ab2182e7b09d1892','commentType':1,'toUserID':'8e59adf6f18045b29bccb02bea96e933'}";
-    private String jsonStringInsertResourceComment="{'courseResourceID':'2345fa494648403f8c4f064ac3ecc435','score':90,'content':'很实用！！！','commentType':0}";
+    private String jsonStringInsertResourceComment="{'courseResourceID':'9711e9bd0aa6490ca8bf3f25241dd6a5','score':90,'content':'很实用！！！','commentType':0}";
     private String insertResourceCommentUrl="/ResourceComment/Insert";
-    private String jsonStringInsertResourceCommentReply="{'courseResourceID':'2345fa494648403f8c4f064ac3ecc435','score':95,'content':'很实用！！！','objectID':'8d06d45cc5954c84ab2182e7b09d1892','commentType':1,'toUserID':'8e59adf6f18045b29bccb02bea96e933'}";
-    private String jsonStringInsertResourceComment1="{'courseResourceID':'e7d9614dffc94056a6d789c173eca070','score':90,'content':'很实用！！！','commentType':0}";
-    private String jsonStringInsertResourceCommentReply1="{'courseResourceID':'e7d9614dffc94056a6d789c173eca070','score':95,'content':'很实用！！！','objectID':'8d06d45cc5954c84ab2182e7b09d1892','commentType':1,'toUserID':'8e59adf6f18045b29bccb02bea96e933'}";
+    private String jsonStringInsertResourceCommentReply="{'courseResourceID':'9711e9bd0aa6490ca8bf3f25241dd6a5','score':95,'content':'很实用！！！','objectID':'96712ec5fa564c1e98f7e12f92a88df1','commentType':1,'toUserID':'8e59adf6f18045b29bccb02bea96e933'}";
+    private String jsonStringInsertResourceComment1="{'courseResourceID':'9711e9bd0aa6490ca8bf3f25241dd6a5','score':90,'content':'很实用！！！','commentType':0}";
+    private String jsonStringInsertResourceCommentReply1="{'courseResourceID':'9711e9bd0aa6490ca8bf3f25241dd6a5','score':95,'content':'很实用！！！','objectID':'96712ec5fa564c1e98f7e12f92a88df1','commentType':1,'toUserID':'8e59adf6f18045b29bccb02bea96e933'}";
 
 
     //,'userID':'8e59adf6f18045b29bccb02bea96e933'  e7d9614dffc94056a6d789c173eca070
     //private String jsonStringGetResourceCommentList="{'resourceStoreName':'f2eafd3fd35e447499ab6d7fd23fb90d.jpg','sinceTime':'2017-10-26 22:02:25','nowTime':'2018-10-29 20:52:46.517'}";
-    private String jsonStringGetResourceCommentList1="{'courseResourceID':'2345fa494648403f8c4f064ac3ecc435','sinceTime':'2017-10-26 22:02:25','nowTime':'2018-10-29 20:52:46.517'}";
-    private String jsonStringGetResourceCommentList="{'courseResourceID':'e7d9614dffc94056a6d789c173eca070','sinceTime':'2017-10-26 22:02:25','nowTime':'2018-10-29 20:52:46.517'}";
+    private String jsonStringGetResourceCommentList1="{'courseResourceID':'9711e9bd0aa6490ca8bf3f25241dd6a5','sinceTime':'2017-10-26 22:02:25','nowTime':'2018-10-29 20:52:46.517'}";
+    private String jsonStringGetResourceCommentList="{'courseResourceID':'9711e9bd0aa6490ca8bf3f25241dd6a5','sinceTime':'2017-10-26 22:02:25','nowTime':'2018-10-29 20:52:46.517'}";
 
     private String getResourceCommentUrl="/ResourceComment/GetCommentList";
     private String jsonStringGetResourceCommentReplyList="{'resourceCommentID':'8d06d45cc5954c84ab2182e7b09d1892','sinceTime':'2017-10-26 22:02:25','nowTime':'2018-10-29 20:52:46.517'}";
@@ -73,7 +74,7 @@ public class ResourceCommentControllerTest {
                                 //get("/user/showUser2")          //请求的url,请求的方法是get
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)//数据的格式
                                 .body(jsonStringInsertResourceComment.getBytes())
-                                .header("userName","admin1")
+                                .header("userName","hehehe")
                                 .header("accessToken",accessToken)
                         //  .param("userName","admin")   //添加参数(可以添加多个)
                         // .param("passWord","123")   //添加参数(可以添加多个)
@@ -93,7 +94,7 @@ public class ResourceCommentControllerTest {
                                 //get("/user/showUser2")          //请求的url,请求的方法是get
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)//数据的格式
                                 .body(jsonStringInsertResourceCommentReply.getBytes())
-                                .header("userName","admin1")
+                                .header("userName","hehehe")
                                 .header("accessToken",accessToken)
                         //  .param("userName","admin")   //添加参数(可以添加多个)
                         // .param("passWord","123")   //添加参数(可以添加多个)
@@ -113,7 +114,7 @@ public class ResourceCommentControllerTest {
                                 //get("/user/showUser2")          //请求的url,请求的方法是get
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)//数据的格式
                                 .body(jsonStringGetResourceCommentList1.getBytes())
-                                .header("userName","admin1")
+                                .header("userName","hehehe")
                                 .header("accessToken",accessToken)
                         //  .param("userName","admin")   //添加参数(可以添加多个)
                         // .param("passWord","123")   //添加参数(可以添加多个)
@@ -133,7 +134,7 @@ public class ResourceCommentControllerTest {
                                 //get("/user/showUser2")          //请求的url,请求的方法是get
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)//数据的格式
                                 .body(jsonStringGetResourceCommentReplyList.getBytes())
-                                .header("userName","admin1")
+                                .header("userName","hehehe")
                                 .header("accessToken",accessToken)
                         //  .param("userName","admin")   //添加参数(可以添加多个)
                         // .param("passWord","123")   //添加参数(可以添加多个)
