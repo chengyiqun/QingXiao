@@ -307,13 +307,13 @@ public class UserController {
         String avatar = (String) avatarMap.get("avatar");
         String contentType = ".jpg";
 
-        BufferedReader br = request.getReader();
+        /*BufferedReader br = request.getReader();
         String str;StringBuilder jsonString = new StringBuilder();
         while ((str = br.readLine()) != null) {
             jsonString.append(str);
             System.out.println("str为" + str);
         }
-        System.out.println("获取更改头像请求流：" + jsonString);
+        System.out.println("获取更改头像请求流：" + jsonString);*/
         if (userService.verifyAccessToken(userName, accessToken) == 4001) {
             System.out.println("文件操作22");
             System.out.println("realName1 "+avatarRealName);

@@ -86,6 +86,7 @@ public class TeachCommentServiceImpl implements TeachCommentService {
 
     @Override
     public List<Map> getTeachCommentList(String jsonString) {
+        System.out.println("TeachCommentController获取教学评论列表"+jsonString);
         HashMap map = (HashMap) JSON.parseObject(jsonString,Map.class);
         String teachID =(String)map.get("teachID");
         String uploadTime =(String)map.get("uploadTime");

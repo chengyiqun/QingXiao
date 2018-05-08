@@ -72,7 +72,7 @@ public class TeachCommentController {
   */
     @RequestMapping(value = "/GetCommentList",method= RequestMethod.POST)
     @ResponseBody
-    public String  getResourceCommentList(HttpServletRequest request) throws IllegalStateException, IOException
+    public String  getTeachCommentList(HttpServletRequest request) throws IllegalStateException, IOException
     {
         System.out.println("课程资源评论list请求为" + request);
         Map<String, Object> resultMap = new HashMap<>();
@@ -85,16 +85,16 @@ public class TeachCommentController {
         String accessToken=request.getHeader("accessToken");
         System.out.println("获取课程资源评论list请求头信息userName："+userName);
         System.out.println("获取课程资源评论list请求头信息accessToken："+accessToken);
-        String str, jsonString = "";
+        String str;StringBuilder jsonString = new StringBuilder();
         while((str = br.readLine()) != null){
-            jsonString += str;
+            jsonString.append(str);
             System.out.println("str为" + str);
         }
         String  resultString ="";
         System.out.println("111获取课程资源评论list请求流："+jsonString);
         System.out.println("Token验证结果："+userService.verifyAccessToken(userName,accessToken));
         if(userService.verifyAccessToken(userName,accessToken)==4001) {
-            List<Map> list = teachCommentService.getTeachCommentList(jsonString);
+            List<Map> list = teachCommentService.getTeachCommentList(jsonString.toString());
             resultString = JSON.toJSONString(list);
         }else{
             result=3004;

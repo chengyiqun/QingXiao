@@ -19,6 +19,7 @@ import java.io.FileInputStream;
  */
 public class FileOperator {
     public static final String AVATAR = "\\avatar\\";
+    public static final String IDENTIFY_CODE="\\identifyCode\\";
     public static final String COURSE_RESOURCE = "\\courseResource\\";
 
     public static void download(HttpServletRequest request, HttpServletResponse response, String storeName,

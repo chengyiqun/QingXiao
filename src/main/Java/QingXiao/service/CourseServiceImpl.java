@@ -39,8 +39,9 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public int insertCourse(String listJson, String userName) {
         //String listJson="";
+        System.out.println("上传课程jsonstring为"+listJson);
         List<Map> list1 = JSON.parseArray(listJson, Map.class);
-        for(Map<String, Object>  map: list1){
+        for(Map map: list1){
 
             HashMap<String, Object> courseMap = new HashMap<>();
             HashMap<String, Object> teacherMap = new HashMap<>();
@@ -111,6 +112,7 @@ public class CourseServiceImpl implements CourseService {
                     courseMapper.insertCourseAllMap(courseMap);
                     System.out.println("插入课程信息成功");
                 } else {
+                    System.out.println("courseID null");
                 }
                 String teacherID = courseMapper.selectTeacherIDByTeacherName(teacherName);
                 if (teacherID == null) {
@@ -120,6 +122,7 @@ public class CourseServiceImpl implements CourseService {
                     courseMapper.insertTeacherAllMap(teacherMap);
                     System.out.println("插入教师信息成功");
                 } else {
+                    System.out.println("teacherID null");
                 }
                 String teachID = courseMapper.selectTeachID(teacherID, courseID, teachTime);
                 if (teachID == null) {
