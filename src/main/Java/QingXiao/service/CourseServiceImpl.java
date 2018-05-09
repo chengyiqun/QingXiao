@@ -2,6 +2,7 @@ package QingXiao.service;
 
 import QingXiao.mappers.CourseMapper;
 import QingXiao.mappers.UserInformMapper;
+import QingXiao.entity.GetCourseResult;
 import QingXiao.util.IdFactory;
 import QingXiao.util.TimeFactory;
 import com.alibaba.fastjson.JSON;
@@ -37,9 +38,9 @@ public class CourseServiceImpl implements CourseService {
     * （4）检查学生选课信息是否在数据库中，不在则插入。
     * */
     @Override
-    public int insertCourse(String listJson, String userName) {
+    public GetCourseResult insertCourse(String listJson, String userName) {
         //String listJson="";
-        System.out.println("上传课程jsonstring为"+listJson);
+        //System.out.println("上传课程jsonstring为"+listJson);
         List<Map> list1 = JSON.parseArray(listJson, Map.class);
         for(Map map: list1){
 
@@ -103,20 +104,24 @@ public class CourseServiceImpl implements CourseService {
 
             String userID=userInformMapper.queryUserIDByUserName(userName);
             if(userID!=null) {
-                System.out.println("userID不为空");
+                //System.out.println("userID不为空");
                 String courseID = courseMapper.selectCourseIDByCourseName(courseName);
                 if (courseID == null) {
-                    System.out.println("courseID为空");
+                    //System.out.println("courseID为空");
                     courseID = IdFactory.getUUID();
                     courseMap.put("courseID", courseID);
+                    map.remove("id");
+                    map.put("id",courseID);
                     courseMapper.insertCourseAllMap(courseMap);
-                    System.out.println("插入课程信息成功");
+                    //System.out.println("插入课程信息成功");
                 } else {
-                    System.out.println("courseID null");
+                    map.remove("id");
+                    map.put("id",courseID);
+                    //System.out.println("courseID null");
                 }
                 String teacherID = courseMapper.selectTeacherIDByTeacherName(teacherName);
                 if (teacherID == null) {
-                    System.out.println("teacherID为空");
+                    //System.out.println("teacherID为空");
                     teacherID = IdFactory.getUUID();
                     teacherMap.put("teacherID", teacherID);
                     courseMapper.insertTeacherAllMap(teacherMap);
@@ -126,7 +131,7 @@ public class CourseServiceImpl implements CourseService {
                 }
                 String teachID = courseMapper.selectTeachID(teacherID, courseID, teachTime);
                 if (teachID == null) {
-                    System.out.println("teachID为空");
+                    //System.out.println("teachID为空");
                     teachID = IdFactory.getUUID();
                     teachMap.put("teacherID",teacherID);
                     teachMap.put("courseID", courseID);
@@ -156,7 +161,8 @@ public class CourseServiceImpl implements CourseService {
         }
 
 
-     return  result;
+
+     return  new GetCourseResult(result,list1);
 
     }
 }

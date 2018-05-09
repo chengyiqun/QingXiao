@@ -3,13 +3,14 @@ package QingXiao.controller;
 import QingXiao.service.CourseService;
 import QingXiao.service.UserService;
 import QingXiao.util.FileOperator;
+import QingXiao.entity.GetCourseResult;
 import QingXiao.util.GetCourseService;
 import QingXiao.util.IdFactory;
 //import com.alibaba.fastjson.JSON;
 //import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSON;
-import io.reactivex.Observer;
 import io.reactivex.functions.Function;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import io.reactivex.Observable;
@@ -35,9 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -133,7 +132,7 @@ public class CourseController {
         */
     @RequestMapping(value = "GetCourse", method = RequestMethod.POST)
     @ResponseBody
-    public JSONObject GetCourse(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public JSONArray GetCourse(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         String userName = req.getHeader("userName");
         userName = URLDecoder.decode(userName, "UTF-8");
         String accessToken = req.getHeader("accessToken");
@@ -165,8 +164,6 @@ public class CourseController {
                 Map<String, String> reviewMap = new HashMap<String, String>();
                 try {
                     RadioButtonList1 = URLEncoder.encode("学生", "gb2312");
-                    __VIEWSTATE = URLEncoder.encode(__VIEWSTATE, "gb2312");
-                    __EVENTVALIDATION = URLEncoder.encode(__EVENTVALIDATION, "gb2312");
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -182,6 +179,7 @@ public class CourseController {
                 reviewMap.put("hidsc", hidsc);
 
                 observableing = retrofitServiceSchoolLogin.loginSchool(reviewMap);
+                String finalUserName = userName;
                 observableing
                         //.subscribeOn(Schedulers.io())                     //登录进教务系统
                         .flatMap((Function<okhttp3.ResponseBody, Observable<okhttp3.ResponseBody>>) responseBody -> {
@@ -189,7 +187,7 @@ public class CourseController {
                             String str1 = responseBody2String(responseBody);
                             System.out.println(str1);
                             if (str1.contains("敏感字符")) {
-                                System.out.println("你的ip已被记录.请不要使用敏感字符！！");
+                                System.out.println("__VIEWSTATE 有问题");
                             }
                             String studentName = isLogin(str1);
                             if (studentName != null && !studentName.equals("")) {
@@ -205,7 +203,7 @@ public class CourseController {
                         .map(responseBody -> {
                             String string = responseBody2String(responseBody);
                             if (string.contains("敏感字符")) {
-                                System.out.println("你的ip已被记录.请不要使用敏感字符！！");
+                                System.out.println("__VIEWSTATE 有问题");
                             }
                             GetCourseService getCourseService = GetCourseService.getCourseService();
                             return getCourseService.getCourseInfo(string);
@@ -217,9 +215,10 @@ public class CourseController {
                             }
 
                             @Override
-                            public void onNext(String coursesJsonString) {
+                            public void onNext(String JsonString) {
                                 System.out.println("获取课表的字符串");
-                                System.out.println(coursesJsonString);
+                                System.out.println(JsonString);
+                                getCourseResult = courseService.insertCourse(JsonString, finalUserName);
                             }
 
                             @Override
@@ -238,12 +237,33 @@ public class CourseController {
             result = 3004;//token验证失败
         }
 
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("result", result);
-        JSONObject jsonObject = JSONObject.fromObject(map);//
-        System.out.println("jsonObject：" + jsonObject);
-        return jsonObject;
+        if(result == 3004){
+            Map<String,Object> map = new HashMap<>();
+            map.put("result",result);
+            List<Map>list=new ArrayList<>();
+            list.add(map);
+            JSONArray jsonArray = JSONArray.fromObject(list);
+            System.out.println("jsonArray：" + jsonArray);
+            return jsonArray;
+        }else {
+            int result= getCourseResult.getResult();
+            switch (result){
+                case 3201:
+                    System.out.println("插入课表ok");
+                    break;
+                case 3202:
+                    System.out.println("数据库已存在课程");
+                    break;
+                case 3203:
+                    System.out.println("用户不存在");
+                    break;
+            }
+            List<Map> list = getCourseResult.getList();
+            JSONArray jsonArray = JSONArray.fromObject(list);
+            //JSONObject jsonObject = JSONObject.fromObject(jsonArray);
+            System.out.println(jsonArray);
+            return jsonArray;
+        }
     }
 
 
@@ -277,7 +297,7 @@ public class CourseController {
         System.out.println("插入课程请求的用户为" + userName);
 
         if (userService.verifyAccessToken(userName, accessToken) == 4001) {
-            result = courseService.insertCourse(jsonString.toString(), userName);
+            //result = courseService.insertCourse(jsonString.toString(), userName);
 
         } else {
             result = userService.verifyAccessToken(userName, accessToken);
@@ -294,13 +314,14 @@ public class CourseController {
 
     //获取课程表
 
-    public Observable<okhttp3.ResponseBody> observable;   //登录之前获取验证码
-    public Observable<okhttp3.ResponseBody> observableing;   //登录进行时
+    private Observable<okhttp3.ResponseBody> observable;   //登录之前获取验证码
+    private Observable<okhttp3.ResponseBody> observableing;   //登录进行时
+    public static GetCourseResult getCourseResult;
 
-    public static String URL_MAIN = "http://xk1.ahu.cn";// 登录成功的首页
-    //这两个玩意是访问教务处的隐藏参数
-    private String __VIEWSTATE = "/wEPDwUJODk4OTczODQxZGQhFC7x2TzAGZQfpidAZYYjo/LeoQ==";
-    private String __EVENTVALIDATION = "/wEWDgKX/4yyDQKl1bKzCQLs0fbZDAKEs66uBwK/wuqQDgKAqenNDQLN7c0VAuaMg+INAveMotMNAoznisYGArursYYIAt+RzN8IApObsvIHArWNqOoPqeRyuQR+OEZezxvi70FKdYMjxzk=";
+    private static final String URL_MAIN = "http://xk1.ahu.cn";// 登录成功的首页
+    //这两个玩意是访问教务处的隐藏参数//此处是GB2312编码
+    private static final String __VIEWSTATE = "%2fwEPDwUJODk4OTczODQxZGQhFC7x2TzAGZQfpidAZYYjo%2fLeoQ%3d%3d";
+    private static final String __EVENTVALIDATION = "%2fwEWDgKX%2f4yyDQKl1bKzCQLs0fbZDAKEs66uBwK%2fwuqQDgKAqenNDQLN7c0VAuaMg%2bINAveMotMNAoznisYGArursYYIAt%2bRzN8IApObsvIHArWNqOoPqeRyuQR%2bOEZezxvi70FKdYMjxzk%3d";
 
     private String txtUserName = "E11514029"; //用户名
     private String TextBox2 = "SHB.19971008";//密码

@@ -1,6 +1,6 @@
 package QingXiao.service;
 
-import java.util.HashMap;
+import QingXiao.entity.GetCourseResult;
 
 /**
  * Created by xpb on 2017/10/24.
@@ -27,5 +27,5 @@ public interface CourseService {
         *    教学实体检查通过教师ID，课程ID，时间确定唯一性。
         * （4）检查学生选课信息是否在数据库中，不在则插入。
         * */
-    int  insertCourse(String listJson, String userName);
+    GetCourseResult insertCourse(String listJson, String userName);
 }

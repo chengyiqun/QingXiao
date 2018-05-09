@@ -13,10 +13,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GetCourseService {
-    public  static final int UPLOAD_COURSE_SUCCESS=3201;
-    public  static final int COURSE_EXISTED=3202;
-    public  static final int USER_NOTEXIST=3003;
-    public  static final int TOKEN_ERROR=3004;
 
     private static volatile GetCourseService getCourseService;
 
