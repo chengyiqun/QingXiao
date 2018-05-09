@@ -1,46 +1,39 @@
-package QingXiao.service;
+package QingXiao.util;
 
 import QingXiao.entity.Course;
+import QingXiao.service.CourseService;
 import com.google.gson.Gson;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CourseService2 {
+public class GetCourseService {
     public  static final int UPLOAD_COURSE_SUCCESS=3201;
     public  static final int COURSE_EXISTED=3202;
     public  static final int USER_NOTEXIST=3003;
     public  static final int TOKEN_ERROR=3004;
 
-    private static volatile CourseService2 courseService2;
+    private static volatile GetCourseService getCourseService;
 
-    private CourseService2() {
+    private GetCourseService() {
     }
 
 
-    public static CourseService2 getCourseService2() {
-        if (courseService2 == null) {
+    public static GetCourseService getCourseService() {
+        if (getCourseService == null) {
             synchronized (CourseService.class) {
-                if (courseService2 == null)
-                    courseService2 = new CourseService2();
+                if (getCourseService == null)
+                    getCourseService = new GetCourseService();
             }
         }
-        return courseService2;
+        return getCourseService;
     }
+
 
 
     /**
@@ -234,7 +227,7 @@ public class CourseService2 {
         }
     }
 
-    public void getCourseInfo(String content) {
+    public String getCourseInfo(String content) {
 
         String[] courseName = new String[30];
         int[] courseStartSection = new int[30];    //
@@ -365,7 +358,7 @@ public class CourseService2 {
                         } catch (ArrayIndexOutOfBoundsException e) {
                             //course.setClasssroom("无教室");
                         }
-                        if (twoSection == true) {
+                        if (twoSection) {
 
                             //周几，可能为空，此时使用传进来的值
                             if (null != matcher.group(1)) {
@@ -477,7 +470,7 @@ public class CourseService2 {
 
                         if ((courseStartSection[i] > 4 && courseStartSection[j] < 4) || (courseStartSection[i] < 4 && courseStartSection[j] > 4)
                                 || !(courseWeek[i].equals(courseWeek[j]))) {   //课程分开不同时间段上课
-                            //System.out.println(i + "-----------数据重复一次但是在不同时间段-----------------");
+                            System.out.println(i + "-----------数据重复一次但是在不同时间段-----------------");
                         } else {
                             courseName[j] = null;       //把重复的课程名后面一个置空，
                             if (courseEndSection[j] == 0) {
@@ -493,7 +486,7 @@ public class CourseService2 {
             }
 
         }
-        /**
+        /*
          * 找到同一时间段内是否有多门课，把该门课标记
          */
         for (int i = 0; i < courseName.length - 1; i++) {
@@ -513,7 +506,7 @@ public class CourseService2 {
         //System.out.println("-----------提交数据之前-----------------");
         //System.out.println(courseName[0] + "-----------第一个数据-----------------");
 
-/**
+/*
  * 把数据保存到数据库中
  * 再上传到服务器上
  */
@@ -546,7 +539,7 @@ public class CourseService2 {
 
         Gson gson = new Gson();
         String coursesJson = gson.toJson(coursesList);
-        System.out.println("上传课表coursesList CourseServices2"+coursesList);
+        return coursesJson;
     }
 
     /**
@@ -556,17 +549,15 @@ public class CourseService2 {
         //可以换种思路，把数组放到set里面（set的值不会重复）就可以去重了
 
         Set<String> set = new HashSet<String>();
-        for (String i : strings)
-            set.add(i);
+        Collections.addAll(set, strings);
       /*  for(Object j: set.toArray()){
             System.out.print(j + " ");
 
         }*/
         String[] strArray = new String[30];      //定义长度为6的字符串数组
-        String[] toArray = (String[]) set.toArray(strArray);  //将集合转换为字符串数组形式
 
 
-        return toArray;
+        return (String[]) set.toArray(strArray);
     }
 
 
@@ -577,7 +568,7 @@ public class CourseService2 {
      * @param i
      * @return 周几
      */
-    public static int fillMap(Element childColumn, int map[][], int i) {
+    private static int fillMap(Element childColumn, int map[][], int i) {
         //这个函数的作用自行领悟，总之就是返回周几，也是无意中发现的，于是就这样获取了，作用是双重保障，因为有些课事无法根据正则匹配出周几第几节到第几节
         boolean hasAttr = childColumn.hasAttr("rowspan");
         int week = 0;
@@ -613,7 +604,7 @@ public class CourseService2 {
      * @param week
      * @param course
      */
-    public void setEveryWeekByChinese(String week, Course course) {
+    private void setEveryWeekByChinese(String week, Course course) {
         // 1代表单周，2代表双周
         if (week != null) {
             if (week.equals("单周"))
@@ -625,7 +616,7 @@ public class CourseService2 {
     }
 
 
-    public int setEveryWeekByChinese1(String week) {
+    private int setEveryWeekByChinese1(String week) {
         // 1代表单周，2代表双周
         if (week != null) {
             if (week.equals("单周")) {
@@ -644,22 +635,24 @@ public class CourseService2 {
      * @param day
      * @return int
      */
-    public int getDayOfWeek(String day) {
-        if (day.equals("一"))
-            return 1;
-        else if (day.equals("二"))
-            return 2;
-        else if (day.equals("三"))
-            return 3;
-        else if (day.equals("四"))
-            return 4;
-        else if (day.equals("五"))
-            return 5;
-        else if (day.equals("六"))
-            return 6;
-        else if (day.equals("日"))
-            return 7;
-        else
-            return 0;
+    private int getDayOfWeek(String day) {
+        switch (day) {
+            case "一":
+                return 1;
+            case "二":
+                return 2;
+            case "三":
+                return 3;
+            case "四":
+                return 4;
+            case "五":
+                return 5;
+            case "六":
+                return 6;
+            case "日":
+                return 7;
+            default:
+                return 0;
+        }
     }
 }
