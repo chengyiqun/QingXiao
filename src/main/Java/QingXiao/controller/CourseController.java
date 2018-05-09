@@ -194,8 +194,14 @@ public class CourseController {
                             }
                             final String errorType = errorType(str1);
                             System.out.println("错误：" + errorType);
-                            if (errorType.contains("验证码")) {
+                            if (errorType.contains("密码")||errorType.contains("用户名")) {
+                                System.out.println("登陆错误");
+                                result=3005;
+                            }
+                            if (errorType.contains("验证码"))
+                            {
                                 System.out.println("验证码错误");
+                                result=3006;
                             }
                             return retrofitServiceSchoolGetCourses.loginSchool2(xh, xm, gnmkdm);
                         })
@@ -237,7 +243,7 @@ public class CourseController {
             result = 3004;//token验证失败
         }
 
-        if (result == 3004) {
+        if (result == 3004||result==3005||result==3006) {
             /*Map<String,Object> map = new HashMap<>();
             map.put("result",result);
             List<Map>list=new ArrayList<>();
