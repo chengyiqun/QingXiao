@@ -137,6 +137,7 @@ public class CourseController {
         System.out.println("插入课程请求的用户为" + userName);
 
         if (userService.verifyAccessToken(userName, accessToken) == 4001) {//token验证成功
+            result=0;
             System.out.println("验证token ok");
             BufferedReader br = req.getReader();
             String str;
@@ -153,9 +154,9 @@ public class CourseController {
             String txtSecretCode = jsonObject.getString("txtSecretCode");
             System.out.println(txtUserName + "+" + TextBox2 + "+" + txtSecretCode);
 
-            if(cookiesone.length()<3){
+            if (cookiesone.length() < 3) {
                 System.out.println("请刷新验证码或者cookies过期");
-            }else {
+            } else {
                 /*int n = cookiesone.length() - 18;
                 cookiesone = cookiesone.substring(0, n);*/
                 xh = txtUserName;
@@ -192,7 +193,7 @@ public class CourseController {
                                 xm = studentName.substring(0, studentName.length() - 2);
                             }
                             final String errorType = errorType(str1);
-                            System.out.println("错误："+errorType);
+                            System.out.println("错误：" + errorType);
                             if (errorType.contains("验证码")) {
                                 System.out.println("验证码错误");
                             }
@@ -217,6 +218,7 @@ public class CourseController {
                                 System.out.println("获取课表的字符串");
                                 System.out.println(JsonString);
                                 getCourseResult = courseService.insertCourse(JsonString, finalUserName);
+                                result=getCourseResult.getResult();
                             }
 
                             @Override
@@ -235,7 +237,7 @@ public class CourseController {
             result = 3004;//token验证失败
         }
 
-        if(result == 3004){
+        if (result == 3004) {
             /*Map<String,Object> map = new HashMap<>();
             map.put("result",result);
             List<Map>list=new ArrayList<>();
@@ -243,11 +245,11 @@ public class CourseController {
             JSONArray jsonArray = JSONArray.fromObject(list);
             System.out.println("jsonArray：" + jsonArray);*/
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("result",result);
+            jsonObject.put("result", result);
             return jsonObject.toString();
-        }else {
-            int result= getCourseResult.getResult();
-            switch (result){
+        } else {
+            int result = getCourseResult.getResult();
+            switch (result) {
                 case 3201:
                     System.out.println("插入课表ok");
                     break;
@@ -263,8 +265,8 @@ public class CourseController {
             //JSONObject jsonObject = JSONObject.fromObject(jsonArray);
             System.out.println(jsonArray);
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("result",result);
-            jsonObject.put("courses",jsonArray);
+            jsonObject.put("result", result);
+            jsonObject.put("courses", jsonArray);
             return jsonObject.toString();
         }
     }
@@ -478,10 +480,9 @@ public class CourseController {
         int firstLeft = errorType3.indexOf("(");
         int firstRight = errorType3.indexOf(")");
 
-        if (errorType3.length()>3){
+        if (errorType3.length() > 3) {
             return errorType3.substring(firstLeft + 2, firstRight - 1);
-        }else
-        {
+        } else {
             return "登陆错误";
         }
     }
