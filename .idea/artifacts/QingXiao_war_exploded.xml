@@ -61,6 +61,9 @@
           <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.41" />
         </element>
       </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/target/QingXiao/META-INF/MANIFEST.MF" />
+      </element>
       <element id="javaee-facet-resources" facet="QingXiao/web/Web" />
     </root>
   </artifact>

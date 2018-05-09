@@ -110,13 +110,11 @@ public class CourseServiceImpl implements CourseService {
                     //System.out.println("courseID为空");
                     courseID = IdFactory.getUUID();
                     courseMap.put("courseID", courseID);
-                    map.remove("id");
-                    map.put("id",courseID);
+                    map.put("courseID",courseID);
                     courseMapper.insertCourseAllMap(courseMap);
                     //System.out.println("插入课程信息成功");
-                } else {
-                    map.remove("id");
-                    map.put("id",courseID);
+                } else { ;
+                    map.put("courseID",courseID);
                     //System.out.println("courseID null");
                 }
                 String teacherID = courseMapper.selectTeacherIDByTeacherName(teacherName);

@@ -6,12 +6,10 @@ import QingXiao.util.FileOperator;
 import QingXiao.entity.GetCourseResult;
 import QingXiao.util.GetCourseService;
 import QingXiao.util.IdFactory;
-//import com.alibaba.fastjson.JSON;
-//import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import io.reactivex.functions.Function;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
@@ -132,7 +130,7 @@ public class CourseController {
         */
     @RequestMapping(value = "GetCourse", method = RequestMethod.POST)
     @ResponseBody
-    public JSONArray GetCourse(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public String GetCourse(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         String userName = req.getHeader("userName");
         userName = URLDecoder.decode(userName, "UTF-8");
         String accessToken = req.getHeader("accessToken");
@@ -238,13 +236,15 @@ public class CourseController {
         }
 
         if(result == 3004){
-            Map<String,Object> map = new HashMap<>();
+            /*Map<String,Object> map = new HashMap<>();
             map.put("result",result);
             List<Map>list=new ArrayList<>();
             list.add(map);
             JSONArray jsonArray = JSONArray.fromObject(list);
-            System.out.println("jsonArray：" + jsonArray);
-            return jsonArray;
+            System.out.println("jsonArray：" + jsonArray);*/
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("result",result);
+            return jsonObject.toString();
         }else {
             int result= getCourseResult.getResult();
             switch (result){
@@ -262,7 +262,10 @@ public class CourseController {
             JSONArray jsonArray = JSONArray.fromObject(list);
             //JSONObject jsonObject = JSONObject.fromObject(jsonArray);
             System.out.println(jsonArray);
-            return jsonArray;
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("result",result);
+            jsonObject.put("courses",jsonArray);
+            return jsonObject.toString();
         }
     }
 

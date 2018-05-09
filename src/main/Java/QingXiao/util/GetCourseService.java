@@ -513,6 +513,7 @@ public class GetCourseService {
             if (courseName[i] != null) {
 
                 Course course = new Course();
+                course.setId(i);
                 course.setSemester(semester);
                 course.setStartYear(startYear);
                 course.setEndYear(endYear);
@@ -534,8 +535,7 @@ public class GetCourseService {
         //System.out.println("nnnnnnnnnnnnnnnnnnnnnnn");
 
         Gson gson = new Gson();
-        String coursesJson = gson.toJson(coursesList);
-        return coursesJson;
+        return gson.toJson(coursesList);
     }
 
     /**
