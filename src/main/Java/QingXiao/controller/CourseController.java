@@ -167,8 +167,9 @@ public class CourseController {
                     e.printStackTrace();
                 }
                 reviewMap.put("__VIEWSTATE", __VIEWSTATE);
-                reviewMap.put("__EVENTVALIDATION", __EVENTVALIDATION);   // 这两个是安大教务处的隐藏参数
+                //reviewMap.put("__EVENTVALIDATION", __EVENTVALIDATION);   // 这两个是安大教务处的隐藏参数（jw1没有这个参数）
                 reviewMap.put("txtUserName", txtUserName);
+                reviewMap.put("TextBox1",TextBox1);//（只有jw1有这个参数，没有值，只是空字符串）
                 reviewMap.put("TextBox2", TextBox2);//密码。。。
                 reviewMap.put("txtSecretCode", txtSecretCode);
                 reviewMap.put("RadioButtonList1", RadioButtonList1);
@@ -309,6 +310,7 @@ public class CourseController {
 
         if (userService.verifyAccessToken(userName, accessToken) == 4001) {
             //result = courseService.insertCourse(jsonString.toString(), userName);
+            System.out.println("验证ok4001");
 
         } else {
             result = userService.verifyAccessToken(userName, accessToken);
@@ -329,12 +331,13 @@ public class CourseController {
     private Observable<okhttp3.ResponseBody> observableing;   //登录进行时
     public static GetCourseResult getCourseResult;
 
-    private static final String URL_MAIN = "http://xk1.ahu.cn";// 登录成功的首页
+    private static final String URL_MAIN = "http://jw1.ahu.cn";// 登录成功的首页
     //这两个玩意是访问教务处的隐藏参数//此处是GB2312编码
-    private static final String __VIEWSTATE = "%2fwEPDwUJODk4OTczODQxZGQhFC7x2TzAGZQfpidAZYYjo%2fLeoQ%3d%3d";
+    private static final String __VIEWSTATE = "dDwtNTE2MjI4MTQ7Oz7iEUOE%2bzDTFL5MlAoa%2fnIjJPPu3A%3d%3d";//jw1d的
     private static final String __EVENTVALIDATION = "%2fwEWDgKX%2f4yyDQKl1bKzCQLs0fbZDAKEs66uBwK%2fwuqQDgKAqenNDQLN7c0VAuaMg%2bINAveMotMNAoznisYGArursYYIAt%2bRzN8IApObsvIHArWNqOoPqeRyuQR%2bOEZezxvi70FKdYMjxzk%3d";
 
     private String txtUserName = "E11514029"; //用户名
+    private String TextBox1 = "";
     private String TextBox2 = "SHB.19971008";//密码
     private String txtSecretCode = "";   //验证码
     private String RadioButtonList1 = "学生"; //学生登陆的选项
@@ -350,7 +353,7 @@ public class CourseController {
     private static String xh = "E11514029";
     private String xm = "%cb%ef%ba%ad%b1%f2";//孙涵彬的GB2312编码
     private String gnmkdm = "N121603";
-    //http://xk1.ahu.cn/xskbcx.aspx?xh=E11514029&xm=%CB%EF%BA%AD%B1%F2&gnmkdm=N121603
+    //http://jw1.ahu.cn/xskbcx.aspx?xh=E11514029&xm=%CB%EF%BA%AD%B1%F2&gnmkdm=N121603
     private static String cookiesone = "";
     private static HashSet<String> cookies = new HashSet<>();
 
@@ -363,8 +366,8 @@ public class CourseController {
     public interface RetrofitServiceSchoolLogin {//登入
 
         @Headers({
-                "Host: xk1.ahu.cn",
-                "Referer: http://xk1.ahu.cn/default2.aspx",
+                "Host: jw1.ahu.cn",
+                "Referer: http://jw1.ahu.cn/default2.aspx",
                 "User-Agent:Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
         })
         @POST("default2.aspx")
@@ -375,9 +378,9 @@ public class CourseController {
 
     public interface RetrofitServiceSchoolGetCourses {//查询课表
 
-        //http://xk1.ahu.cn/xskbcx.aspx?xh=E11514029&xm=%CB%EF%BA%AD%B1%F2&gnmkdm=N121603
+        //http://jw1.ahu.cn/xskbcx.aspx?xh=E11514029&xm=%CB%EF%BA%AD%B1%F2&gnmkdm=N121603
         @Headers({
-                "Host: xk1.ahu.cn",
+                "Host: jw1.ahu.cn",
                 "User-Agent:Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"})
         @GET("xskbcx.aspx")
         Observable<okhttp3.ResponseBody> loginSchool2(@Query("xh") String xh, @Query("xm") String xm, @Query("gnmkdm") String gnmkdm);
@@ -388,7 +391,7 @@ public class CourseController {
             .addInterceptor(chain -> {
                 Request.Builder builder = chain.request().newBuilder();
                 builder.addHeader("cookie", cookiesone);
-                builder.addHeader("Referer", "http://xk1.ahu.cn/xs_main.aspx?xh=" + xh);
+                builder.addHeader("Referer", "http://jw1.ahu.cn/xs_main.aspx?xh=" + xh);
                 return chain.proceed(builder.build());
             }).connectTimeout(20, TimeUnit.SECONDS)
             .build();
