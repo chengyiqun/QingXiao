@@ -5,44 +5,76 @@
 <mapper namespace="QingXiao.mappers.CourseResourceMapper">
 
     <insert id="insertCourseResourceAllMap" parameterType="java.util.HashMap">
-        insert into course_resource (course_resource_id,user_id,course_id,resource_number,
-        upload_time,file_name,resource_store_name,resource_describe,resource_type,resource_path,
-        comprehensive_score,
-        like_times,comment_times,download_times,share_times,
-        cost_points,cost_points_sum,privileges
-        ,status) values(#{courseResourceID},#{userID},#{courseID},#{resourceNumber},#{uploadTime},
-        #{fileName},#{resourceStoreName},#{resourceDescribe},#{resourceType},#{resourcePath},
-        #{comprehensiveScore},#{likeTimes},#{commentTimes},#{downloadTimes},#{shareTimes}
-        ,#{costPoints},#{costPointsSum},#{privileges},#{status})
+        insert into course_resource (course_resource_id, user_id, course_id, resource_number,
+                                     upload_time, file_name, resource_store_name, resource_describe, resource_type, resource_path,
+                                     comprehensive_score,
+                                     like_times, comment_times, download_times, share_times,
+                                     cost_points, cost_points_sum, privileges
+            , status) values (#{courseResourceID}, #{userID}, #{courseID}, #{resourceNumber}, #{uploadTime},
+                                                   #{fileName}, #{resourceStoreName}, #{resourceDescribe},
+                                                   #{resourceType}, #{resourcePath},
+                                                   #{comprehensiveScore}, 0, 0, 0, 0
+            , #{costPoints}, #{costPointsSum}, #{privileges}, 0)
     </insert>
 
-    <select id="selectCourseResourceByCourseID" parameterType="java.lang.String" resultType="java.util.HashMap">
-       SELECT upload_time,file_name,resource_store_name,resource_describe,comprehensive_score,
-        like_times,comment_times,download_times,share_times,cost_points
-        FROM  course_resource  where course_id= #{courseID}
+    <select id="selectCourseResourceByCourseID" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT
+            upload_time,
+            file_name,
+            resource_store_name,
+            resource_describe,
+            comprehensive_score,
+            like_times,
+            comment_times,
+            download_times,
+            share_times,
+            cost_points
+        FROM course_resource
+        where course_id = #{courseID}
     </select>
 
-    <select id="selectCourseResource" parameterType="java.lang.String" resultType="java.util.HashMap">
-        SELECT upload_time,file_name,resource_store_name,resource_describe,comprehensive_score,
-        like_times,comment_times,download_times,share_times,cost_points
-        FROM  course_resource  where course_id= #{courseID} and upload_time BETWEEN #{sinceTime} and  #{nowTime}
+    <select id="selectCourseResource" parameterType="java.lang.String" resultMap="CourseResourceMap2">
+        SELECT
+            upload_time,
+            file_name,
+            resource_store_name,
+            resource_describe,
+            comprehensive_score,
+            like_times,
+            comment_times,
+            download_times,
+            share_times,
+            cost_points
+        FROM course_resource
+        where course_id = #{courseID} and upload_time BETWEEN #{sinceTime} and #{nowTime}
     </select>
 
-    <select id="selectCourseResourceIDByResourceStoreName" parameterType="java.lang.String" resultType="java.lang.String">
-        SELECT course_resource_id FROM  course_resource   where resource_store_name= #{resourceStoreName}
+    <select id="selectCourseResourceIDByResourceStoreName" parameterType="java.lang.String"
+            resultType="java.lang.String">
+        SELECT course_resource_id
+        FROM course_resource
+        where resource_store_name = #{resourceStoreName}
     </select>
 
-    <update id="updateResourceDownloads" parameterType="java.lang.String" >
-        UPDATE course_resource SET  download_times =download_times+1   where resource_store_name= #{resourceStoreName}
+    <update id="updateResourceDownloads" parameterType="java.lang.String">
+        UPDATE course_resource
+        SET download_times = download_times + 1
+        where resource_store_name = #{resourceStoreName}
     </update>
-    <update id="updateResourceComments" parameterType="java.lang.String" >
-        UPDATE course_resource SET  comment_times =comment_times+1   where resource_store_name= #{resourceStoreName}
+    <update id="updateResourceComments" parameterType="java.lang.String">
+        UPDATE course_resource
+        SET comment_times = comment_times + 1
+        where resource_store_name = #{resourceStoreName}
     </update>
-    <update id="updateResourceLikes" parameterType="java.lang.String" >
-        UPDATE course_resource SET  like_times =like_times+1   where resource_store_name= #{resourceStoreName}
+    <update id="updateResourceLikes" parameterType="java.lang.String">
+        UPDATE course_resource
+        SET like_times = like_times + 1
+        where resource_store_name = #{resourceStoreName}
     </update>
-    <update id="updateResourceShares" parameterType="java.lang.String" >
-        UPDATE course_resource SET  share_times =share_times+1   where resource_store_name= #{resourceStoreName}
+    <update id="updateResourceShares" parameterType="java.lang.String">
+        UPDATE course_resource
+        SET share_times = share_times + 1
+        where resource_store_name = #{resourceStoreName}
     </update>
     <!--嵌套查询，先通过courseName在Course表中查找CourseID。在通过CourseID
      在CourseResource中查询CourseResource-->
@@ -52,27 +84,41 @@
 
 
     <select id="selectCourseResourceByCourseName" parameterType="java.lang.String" resultMap="CourseResourceMap">
-        SELECT * FROM  CourseInform,courseresource   where courseName= #{courseName} and courseinform.courseID=courseresource.courseID
+        SELECT *
+        FROM CourseInform, courseresource
+        where courseName = #{courseName} and courseinform.courseID = courseresource.courseID
     </select>
     <!-- 使用resultMap映射实体类和字段之间的一一对应关系 -->
-        <resultMap type="QingXiao.entity.CourseResource" id="CourseResourceMap">
-            <id property="courseResourceID" column="course_resource_id"/>
-            <result property="uploadTime" column="upload_time"/>
-            <result property="fileName" column="file_name"/>
-            <result property="resourceDescribe" column="resource_describe"/>
-            <result property="resourceType" column="resource_type"/>
-            <result property="resourcePath" column="resource_path"/>
-            <result property="comprehensiveScore" column="comprehensive_score"/>
-            <result property="commentTimes" column="comment_times"/>
-            <result property="downloadTimes" column="download_times"/>
-            <result property="likeTimes" column="like_times"/>
-            <result property="shareTimes" column="share_times"/>
-                <association property="courseID" javaType="QingXiao.entity.CourseInform">
-                   <id property="courseID" column="course_id"/>
+    <resultMap type="QingXiao.entity.CourseResource" id="CourseResourceMap">
+        <id property="courseResourceID" column="course_resource_id"/>
+        <result property="uploadTime" column="upload_time"/>
+        <result property="fileName" column="file_name"/>
+        <result property="resourceDescribe" column="resource_describe"/>
+        <result property="resourceType" column="resource_type"/>
+        <result property="resourcePath" column="resource_path"/>
+        <result property="comprehensiveScore" column="comprehensive_score"/>
+        <result property="commentTimes" column="comment_times"/>
+        <result property="downloadTimes" column="download_times"/>
+        <result property="likeTimes" column="like_times"/>
+        <result property="shareTimes" column="share_times"/>
+        <association property="courseID" javaType="QingXiao.entity.CourseInform">
+            <id property="courseID" column="course_id"/>
 
-              </association>
-        </resultMap>
-
+        </association>
+    </resultMap>
+    <resultMap type="QingXiao.entity.CourseResource" id="CourseResourceMap2">
+        <id property="courseResourceID" column="course_resource_id"/>
+        <result property="uploadTime" column="upload_time"/>
+        <result property="fileName" column="file_name"/>
+        <result property="resourceDescribe" column="resource_describe"/>
+        <result property="resourceStoreName" column="resource_store_name"/>
+        <result property="comprehensiveScore" column="comprehensive_score"/>
+        <result property="commentTimes" column="comment_times"/>
+        <result property="downloadTimes" column="download_times"/>
+        <result property="likeTimes" column="like_times"/>
+        <result property="shareTimes" column="share_times"/>
+        <result property="costPoints" column="cost_points"/>
+    </resultMap>
 
 
 </mapper>

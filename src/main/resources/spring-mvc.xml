@@ -46,4 +46,5 @@
         <!-- 内存中的最大值 -->
         <property name="maxInMemorySize" value="4096"/>
     </bean>
+    <!--配置静态文件URL映射-->
 </beans>

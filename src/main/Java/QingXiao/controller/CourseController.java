@@ -270,11 +270,13 @@ public class CourseController {
             List<Map> list = getCourseResult.getList();
             JSONArray jsonArray = JSONArray.fromObject(list);
             //JSONObject jsonObject = JSONObject.fromObject(jsonArray);
-            System.out.println(jsonArray);
+            //System.out.println(jsonArray);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("result", result);
             jsonObject.put("courses", jsonArray);
-            return jsonObject.toString();
+            String resultString=jsonObject.toString();
+            System.out.println(resultString);
+            return resultString;
         }
     }
 

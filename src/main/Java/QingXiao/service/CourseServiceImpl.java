@@ -27,7 +27,7 @@ public class CourseServiceImpl implements CourseService {
     @Resource
     @SuppressWarnings("SpringJavaAutowiringInspection")
     UserInformMapper userInformMapper;
-    private int result=0;
+    private int result = 0;
 
     /*
     上传时应该是好多课程记录一起上传，所以还要有一个循环。
@@ -42,7 +42,7 @@ public class CourseServiceImpl implements CourseService {
         //String listJson="";
         //System.out.println("上传课程jsonstring为"+listJson);
         List<Map> list1 = JSON.parseArray(listJson, Map.class);
-        for(Map map: list1){
+        for (Map map : list1) {
 
             HashMap<String, Object> courseMap = new HashMap<>();
             HashMap<String, Object> teacherMap = new HashMap<>();
@@ -53,48 +53,48 @@ public class CourseServiceImpl implements CourseService {
             String teacherName = (String) map.get("teacherName");
 
             //课程实体信息
-            String courseCode=(String) map.get("courseCode");
-            String courseNature =(String) map.get("courseNature");
-           // int credit =(Integer) map.get("credit");
-           // int classHours=(Integer) map.get("classHours");
+            String courseCode = (String) map.get("courseCode");
+            String courseNature = (String) map.get("courseNature");
+            // int credit =(Integer) map.get("credit");
+            // int classHours=(Integer) map.get("classHours");
             String courseName = (String) map.get("courseName");
             courseMap.put("courseCode", courseCode);
             courseMap.put("courseNature", courseNature);
             //courseMap.put("credit",credit);
-           // courseMap.put("classHours",classHours);
-            courseMap.put("courseName",courseName);
+            // courseMap.put("classHours",classHours);
+            courseMap.put("courseName", courseName);
 
             //教师实体信息
-            teacherMap.put("teacherName",teacherName);
+            teacherMap.put("teacherName", teacherName);
 
             //教学实体信息
-            int startYear=(Integer) map.get("startYear");
-            int endYear =(Integer) map.get("endYear");
-            int semester =(Integer) map.get("semester");
+            int startYear = (Integer) map.get("startYear");
+            int endYear = (Integer) map.get("endYear");
+            int semester = (Integer) map.get("semester");
             String classsroom = (String) map.get("classsroom");
-            int dayOfWeek=(Integer) map.get("dayOfWeek");
-            int startSection=(Integer) map.get("startSection");
-            int endSection =(Integer) map.get("endSection");
-            int startWeek =(Integer) map.get("startWeek");
-            int endWeek=(Integer) map.get("endWeek");
-            int everyWeek =(Integer) map.get("everyWeek");
-            int sameTime=(Integer) map.get("sameTime");
-            String teachTime = String.valueOf(startYear)+"-"+String.valueOf(endYear)+"-"+String.valueOf(semester);
+            int dayOfWeek = (Integer) map.get("dayOfWeek");
+            int startSection = (Integer) map.get("startSection");
+            int endSection = (Integer) map.get("endSection");
+            int startWeek = (Integer) map.get("startWeek");
+            int endWeek = (Integer) map.get("endWeek");
+            int everyWeek = (Integer) map.get("everyWeek");
+            int sameTime = (Integer) map.get("sameTime");
+            String teachTime = String.valueOf(startYear) + "-" + String.valueOf(endYear) + "-" + String.valueOf(semester);
 
-            teachMap.put("startYear",startYear);
-            teachMap.put("endYear",endYear);
-            teachMap.put("semester",semester);
-            teachMap.put("classsroom",classsroom);
-            teachMap.put("dayOfWeek",dayOfWeek);
-            teachMap.put("startSection",startSection);
+            teachMap.put("startYear", startYear);
+            teachMap.put("endYear", endYear);
+            teachMap.put("semester", semester);
+            teachMap.put("classsroom", classsroom);
+            teachMap.put("dayOfWeek", dayOfWeek);
+            teachMap.put("startSection", startSection);
 
-            teachMap.put("endSection",endSection);
+            teachMap.put("endSection", endSection);
             teachMap.put("startWeek", startWeek);
-            teachMap.put("endWeek",endWeek);
-            teachMap.put("everyWeek",everyWeek);
-            teachMap.put("sameTime",sameTime);
-            teachMap.put("teachTime",teachTime);
-            teachMap.put("startDate",TimeFactory.getCurrentTimeDate()); //该字段有待商量
+            teachMap.put("endWeek", endWeek);
+            teachMap.put("everyWeek", everyWeek);
+            teachMap.put("sameTime", sameTime);
+            teachMap.put("teachTime", teachTime);
+            teachMap.put("startDate", TimeFactory.getCurrentTimeDate()); //该字段有待商量
             teachMap.put("downloadTimes", 0);
             teachMap.put("commentTimes", 0);
 
@@ -102,21 +102,20 @@ public class CourseServiceImpl implements CourseService {
             // 学生选课实体信息
             courseMap.put("chooseCourseTime", TimeFactory.getCurrentTimeDate());
 
-            String userID=userInformMapper.queryUserIDByUserName(userName);
-            if(userID!=null) {
+            String userID = userInformMapper.queryUserIDByUserName(userName);
+            if (userID != null) {
                 //System.out.println("userID不为空");
                 String courseID = courseMapper.selectCourseIDByCourseName(courseName);
                 if (courseID == null) {
                     //System.out.println("courseID为空");
                     courseID = IdFactory.getUUID();
                     courseMap.put("courseID", courseID);
-                    map.put("courseID",courseID);
                     courseMapper.insertCourseAllMap(courseMap);
                     //System.out.println("插入课程信息成功");
-                } else { ;
-                    map.put("courseID",courseID);
-                    //System.out.println("courseID null");
+                } else {
+                    System.out.println("courseID null");
                 }
+                map.put("courseID", courseID);
                 String teacherID = courseMapper.selectTeacherIDByTeacherName(teacherName);
                 if (teacherID == null) {
                     //System.out.println("teacherID为空");
@@ -131,36 +130,36 @@ public class CourseServiceImpl implements CourseService {
                 if (teachID == null) {
                     //System.out.println("teachID为空");
                     teachID = IdFactory.getUUID();
-                    teachMap.put("teacherID",teacherID);
+                    teachMap.put("teacherID", teacherID);
                     teachMap.put("courseID", courseID);
                     teachMap.put("teachID", teachID);
                     courseMapper.insertTeachAllMap(teachMap);
                     System.out.println("插入教学实体信息成功");
                 }
-                String studentCourseID=courseMapper.selectStudentCourseID(teachID,userID);
+                String studentCourseID = courseMapper.selectStudentCourseID(teachID, userID);
                 if (studentCourseID == null) {
                     System.out.println("studentCourseID为空");
                     studentCourseID = IdFactory.getUUID();
                     studentCourseMap.put("studentCourseID", studentCourseID);
-                    studentCourseMap.put("teachID",teachID);
-                    studentCourseMap.put("userID",userID);
+                    studentCourseMap.put("teachID", teachID);
+                    studentCourseMap.put("userID", userID);
                     courseMapper.insertStudentCourseAllMap(studentCourseMap);
                     System.out.println("插入学生选课信息成功");
-                    result=3201;
-                }else{
+                    result = 3201;
+                } else {
                     //课程信息已上传导入到数据库
-                   result=3202;
+                    result = 3202;
                 }
+                map.put("teachID", teachID);
 
-            }else{
+            } else {
                 // 用户不存在
-                result=3003;
+                result = 3003;
             }
         }
 
 
-
-     return  new GetCourseResult(result,list1);
+        return new GetCourseResult(result, list1);
 
     }
 }

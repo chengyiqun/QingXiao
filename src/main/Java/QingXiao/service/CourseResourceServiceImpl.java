@@ -88,7 +88,7 @@ public class CourseResourceServiceImpl implements CourseResourceService {
            courseID=courseMapper.selectCourseIDByCourseName(courseName);
         }
         List<Map> list= new LinkedList<>();
-        if(courseID!=null) {
+        if(!courseID.equals("")) {
              System.out.println("课程ID不为空");
              //list = courseResourceMapper.selectCourseResourceByCourseID(courseID);
              list = courseResourceMapper.selectCourseResource(courseID,sinceTime,nowTime);
