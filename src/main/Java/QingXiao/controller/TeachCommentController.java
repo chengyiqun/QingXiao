@@ -135,15 +135,18 @@ public class TeachCommentController {
         System.out.println("111获取课程资源评论list请求流："+jsonString);
         System.out.println("Token验证结果："+userService.verifyAccessToken(userName,accessToken));
         if(userService.verifyAccessToken(userName,accessToken)==4001) {
+            result = 0;
             List<Map> list = teachCommentService.getTeachCommentReplyList(jsonString.toString());
             resultString = JSON.toJSONString(list);
         }else{
             result=3004;
             // resultMap.put("result",3004);  //token验证失败，重新登录
         }
+
+
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("result",result);
-
+        jsonObject.put("commentReplyList", resultString);
         System.out.println("result：" + resultString);
         return jsonObject.toString();
     }

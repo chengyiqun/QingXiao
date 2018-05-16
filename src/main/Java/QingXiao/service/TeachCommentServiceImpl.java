@@ -104,13 +104,12 @@ public class TeachCommentServiceImpl implements TeachCommentService {
     public List<Map> getTeachCommentReplyList(String jsonString) {
         HashMap map = (HashMap) JSON.parseObject(jsonString, Map.class);
         String teachCommentID = (String) map.get("teachCommentID");
-        String uploadTime = (String) map.get("uploadTime");
+        //String uploadTime = (String) map.get("uploadTime");
         String sinceTime = (String) map.get("sinceTime");
         String nowTime = (String) map.get("nowTime");
         List<Map> list = new LinkedList<>();
         if (teachCommentID != null) {
-            System.out.println("课程资源ID不为空");
-            //list = courseResourceMapper.selectCourseResourceByCourseID(courseID);
+            System.out.println("课程评论ID不为空");
             list = teachCommentMapper.selectTeachCommentReplyList(teachCommentID, sinceTime, nowTime);
             System.out.println("课程评论信息List:" + list);
         }

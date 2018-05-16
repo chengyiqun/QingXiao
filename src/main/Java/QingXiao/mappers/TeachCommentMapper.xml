@@ -31,14 +31,16 @@
     <select id="selectTeachCommentReplyList" parameterType="java.lang.String" resultType="java.util.Map">
         SELECT tc1.teach_comment_id,tc1.comment_type,tc1.comment_time,
         u1.user_name as replyUserName,
+        u1.avatar_store_name,
         tc1.to_user_id,u2.user_name as toUsername,tc1.user_id
         ,tc1.comment_times,tc1.like_times,tc1.share_times
         ,tc1.content,tc2.content as replyedContent
         FROM  teach_comment as tc1,teach_comment as tc2,
         user_inform u1,user_inform u2
         where tc1.root_comment= #{rootComment}
-        and tc1.user_id=u1.user_id and tc1.to_user_id=u2.user_id
+        and tc1.user_id=u1.user_id
         and  tc1.object_id=tc2.teach_comment_id
+        order by tc1.comment_time DESC
     </select>
 
     <!--更新资源评论的回复数-->
