@@ -35,6 +35,7 @@
 
     <select id="selectCourseResource" parameterType="java.lang.String" resultMap="CourseResourceMap2">
         SELECT
+            course_resource_id,
             upload_time,
             file_name,
             resource_store_name,

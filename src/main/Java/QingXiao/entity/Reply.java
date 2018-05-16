@@ -6,9 +6,20 @@ import java.util.List;
  * Created by xpb on 2018/1/4.
  */
 public class Reply {
+    String courseResourceID;
     String commentID ;
     String topicID  ;
     String userID  ;
+
+    public String getAvatar_store_name() {
+        return avatar_store_name;
+    }
+
+    public void setAvatar_store_name(String avatar_store_name) {
+        this.avatar_store_name = avatar_store_name;
+    }
+
+    String avatar_store_name;
     String  userName;   //返回评论用户的名字
     int commentType ;//0评论，1回复
     String rootComment ;//comment_type=1时有效
@@ -23,6 +34,14 @@ public class Reply {
     int     score   ;
     int   status    ;
     private List<TopicComment> topicCommentList;
+
+    public String getCourseResourceID() {
+        return courseResourceID;
+    }
+
+    public void setCourseResourceID(String courseResourceID) {
+        this.courseResourceID = courseResourceID;
+    }
 
     public String getCommentID() {
         return commentID;
@@ -155,9 +174,11 @@ public class Reply {
     @Override
     public String toString() {
         return "Reply{" +
-                "commentID='" + commentID + '\'' +
+                "courseResourceID='" + courseResourceID + '\'' +
+                ", commentID='" + commentID + '\'' +
                 ", topicID='" + topicID + '\'' +
                 ", userID='" + userID + '\'' +
+                ", avatar_store_name='" + avatar_store_name + '\'' +
                 ", userName='" + userName + '\'' +
                 ", commentType=" + commentType +
                 ", rootComment='" + rootComment + '\'' +

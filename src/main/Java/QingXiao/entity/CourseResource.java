@@ -6,6 +6,16 @@ public class CourseResource {
 	String courseResourceID;
 	String userID;
 	String   courseID;
+
+	public String getAvatar_store_name() {
+		return avatar_store_name;
+	}
+
+	public void setAvatar_store_name(String avatar_store_name) {
+		this.avatar_store_name = avatar_store_name;
+	}
+
+	String avatar_store_name;
 	String   resourceNumber;
 	String   uploadTime;
 	String   fileName;
@@ -190,6 +200,7 @@ public class CourseResource {
 				"courseResourceID='" + courseResourceID + '\'' +
 				", userID='" + userID + '\'' +
 				", courseID='" + courseID + '\'' +
+				", avatar_store_name='" + avatar_store_name + '\'' +
 				", resourceNumber='" + resourceNumber + '\'' +
 				", uploadTime='" + uploadTime + '\'' +
 				", fileName='" + fileName + '\'' +

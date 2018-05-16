@@ -5,6 +5,7 @@ import QingXiao.service.ResourceCommentService;
 import QingXiao.service.TeachCommentService;
 import QingXiao.service.UserService;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,9 +43,9 @@ public class ResourceCommentController {
         System.out.println("请求resourceCommentService为" +resourceCommentService);
         BufferedReader br = req.getReader();
         System.out.println("获取插入资源评论请求流："+br);
-        String str, jsonString = "";
+        String str;StringBuilder jsonString = new StringBuilder();
         while((str = br.readLine()) != null){
-            jsonString += str;
+            jsonString.append(str);
             System.out.println("str为" + str);
         }
         System.out.println(jsonString);
@@ -55,7 +56,7 @@ public class ResourceCommentController {
         System.out.println("插入资源评论请求的用户为" + userName);
 
         if(userService.verifyAccessToken(userName,accessToken)==4001) {
-            result= resourceCommentService.insertResourceComment(jsonString, userName);
+            result= resourceCommentService.insertResourceComment(jsonString.toString(), userName);
         } else {
             //result=userService.verifyAccessToken(userName,accessToken);
             result=3004;
@@ -86,25 +87,28 @@ public class ResourceCommentController {
         String accessToken=request.getHeader("accessToken");
         System.out.println("获取课程资源评论list请求头信息userName："+userName);
         System.out.println("获取课程资源评论list请求头信息accessToken："+accessToken);
-        String str, jsonString = "";
+        String str;StringBuilder jsonString = new StringBuilder();
         while((str = br.readLine()) != null){
-            jsonString += str;
+            jsonString.append(str);
             System.out.println("str为" + str);
         }
         String  resultString ="";
         System.out.println("111获取课程资源评论list请求流："+jsonString);
         System.out.println("Token验证结果："+userService.verifyAccessToken(userName,accessToken));
         if(userService.verifyAccessToken(userName,accessToken)==4001) {
-            List<Reply> list = resourceCommentService.getResourceCommentList(jsonString);
+            System.out.println("token没问题");
+            List<Reply> list = resourceCommentService.getResourceCommentList(jsonString.toString());
             resultString = JSON.toJSONString(list);
         }else{
             result=3004;
             // resultMap.put("result",3004);  //token验证失败，重新登录
         }
         resultMap.put("result",result);
-
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("result",result);
+        jsonObject.put("resultString",resultString);
         System.out.println("result：" + resultString);
-        return resultString;
+        return jsonObject.toString();
     }
 
     /*
@@ -125,16 +129,16 @@ public class ResourceCommentController {
         String accessToken=request.getHeader("accessToken");
         System.out.println("获取课程资源评论list请求头信息userName："+userName);
         System.out.println("获取课程资源评论list请求头信息accessToken："+accessToken);
-        String str, jsonString = "";
+        String str;StringBuilder jsonString = new StringBuilder();
         while((str = br.readLine()) != null){
-            jsonString += str;
+            jsonString.append(str);
             System.out.println("str为" + str);
         }
         String  resultString ="";
         System.out.println("111获取课程资源评论list请求流："+jsonString);
         System.out.println("Token验证结果："+userService.verifyAccessToken(userName,accessToken));
         if(userService.verifyAccessToken(userName,accessToken)==4001) {
-            List<Reply> list = resourceCommentService.getResourceCommentReplyList(jsonString);
+            List<Reply> list = resourceCommentService.getResourceCommentReplyList(jsonString.toString());
             resultString = JSON.toJSONString(list);
         }else{
             result=3004;

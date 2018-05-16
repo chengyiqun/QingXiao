@@ -12,7 +12,7 @@
        values (#{resourceCommentID},#{courseResourceID},
        #{commentType},#{rootComment},
        #{objectID},#{toUserID},#{userID},#{commentTime},
-       #{content},#{score},#{status})
+       #{content},0,0)
     </insert>
     <!--更新资源评论的回复数-->
     <update id="updateResourceCommentReplys" parameterType="java.lang.String" >
@@ -52,9 +52,11 @@
          SELECT
         rc1.user_id rc1_user_id,rc1.course_resource_id rc1_course_resource_id ,rc1.comment_time rc1_comment_time,
         rc1.resource_comment_id rc1_comment_id,u1.user_name u1_username,
+             u1.avatar_store_name,
         u2.user_name u2_username,rc1.like_times,rc1.share_times
         ,rc1.content  rc1_content ,rc1.score  rc1_score ,
         rc2.content rc1_to_content,  cr.user_id  cr_user_id ,
+
         cr.course_id cr_course_id,cr.resource_describe cr_resource_describe,
         cr.resource_path  cr_resource_path,cr.like_times cr_like_times
         FROM  resource_comment as rc1,resource_comment as rc2,course_resource as cr,
@@ -133,6 +135,7 @@
         <result property="likeTimes" column="cr_like_times"/>
         <result property="courseID" column="cr_course_id"/>
         <result property="userID" column="cr_user_id"/>
+        <result property="avatar_store_name" column="avatar_store_name"/>
         <result property="resourcePath" column="cr_resource_path"/>
         <result property="commentTimes" column="cr_comment_times"/>
         <result property="resourceDescribe" column="rc3_resource_describe"/>
