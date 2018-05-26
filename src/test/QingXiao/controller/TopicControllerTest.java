@@ -58,7 +58,7 @@ public class TopicControllerTest {
     private String jsonStringGetTopicCommentReplyList="{'commentID':'faeb6f8d5351440bbccb39f0df0409ff','sinceTime':'2017-10-26 22:02:25','nowTime':'2018-10-29 20:52:46.517'}";
     private String getTopicCommentReplyUrl="/Topic/GetCommentReplyList";
 
-    private String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQ29tbW9uIiwidXNlcmlkIjoibnVsbCIsImlzcyI6IlFpbmdYaWFvIiwiYXVkIjoiIiwiZXhwIjoxNTE3MzE0OTg5LCJuYmYiOjE1MTQ3MjI5ODl9.uJgOjO8djDQ5vlF2-9gQx-zrqqoECvDuWdqnxvczvpI";
+    private String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQ29tbW9uIiwidW5pcXVlX25hbWUiOiLnqIvkuYnnvqQiLCJ1c2VyaWQiOiI2N2IxOGY1MWEyNDM0YTI3OTEzZDliMDNjMmQwMjAxZCIsImlzcyI6IlFpbmdYaWFvIiwiYXVkIjoiIiwiZXhwIjoxNTI5NTAzOTM1LCJuYmYiOjE1MjY5MTE5MzV9.m2L7JCIJ0zIvO7zjDUzXJbZ4dKEtZQbe7s04dmS5xfY";
     @Before()  //这个方法在每个方法执行之前都会执行一遍
     public void setup()
     {
@@ -72,13 +72,13 @@ public class TopicControllerTest {
                                 //get("/user/showUser2")          //请求的url,请求的方法是get
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)//数据的格式
                                 .body(jsonStringInsertTopic.getBytes())
-                                .header("userName","admin1")
+                                .header("userName","程义群")
                                 .header("accessToken",accessToken)
                         //  .param("userName","admin")   //添加参数(可以添加多个)
                         // .param("passWord","123")   //添加参数(可以添加多个)
                 )
                 .andExpect(status().isOk())    //返回的状态是200
-                .andDo(print())       //打印出请求和相应的内容
+                //.andDo(print())       //打印出请求和相应的内容
                 //.andReturn();
                 .andReturn().getResponse().getContentAsString();   //将相应的数据转换为字符串
         //System.out.println("-----返回的json = " + responseString);
@@ -104,7 +104,7 @@ public class TopicControllerTest {
         //request.addPart("name",new Part("中国心", Charset.forName("UTF-8")));
         //request.addPart(jsonStringUploadCourseResource);
         request.addHeader("accessToken",accessToken);
-        request.addHeader("userName","admin1");
+        request.addHeader("userName","程义群");
         System.out.println("更改头像请求topicController为" +topicController);
         String jsonResultObject = null;
         try {

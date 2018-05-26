@@ -147,7 +147,7 @@ public class TeachCommentController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("result",result);
         jsonObject.put("commentReplyList", resultString);
-        System.out.println("result：" + resultString);
+        System.out.println("JsonObject：" + jsonObject);
         return jsonObject.toString();
     }
 }

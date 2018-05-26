@@ -58,7 +58,7 @@ public class TopicServiceImpl implements  TopicService {
         //HashMap lableMap = (HashMap)topicMap.get("lableList");
 
 
-        String subjectID = IdFactory.getUUID();
+
         String userID = userInformMapper.queryUserIDByUserName(userName);
         topicMap.put("userID",userID);
         if (userID != null) {

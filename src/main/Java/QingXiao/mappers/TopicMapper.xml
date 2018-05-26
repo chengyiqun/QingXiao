@@ -11,8 +11,8 @@
     share_times,browse_times,dont_mask_stranger,status)
     values (#{topicID},#{userID},
     #{subjectID},#{topicTime},
-    #{content},#{topicPlace},#{commentTimes},#{likeTimes},
-    #{ shareTimes},#{browseTimes},#{dontMaskStranger},#{status})
+    #{content},#{topicPlace},0,0,
+    0,0,#{dontMaskStranger},0)
 </insert>
     <!--变量顺序要和数据库的一致,插入动态图片-->
     <insert id="insertTopicImage" parameterType="java.util.HashMap">
@@ -21,7 +21,7 @@
         image_path,image_type,status)
         values (#{imageID},#{topicID},#{picOrder},
         #{fileName},#{imageStoreName},#{imageDescribe},
-        #{imagePath},#{imageType},#{status})
+        #{imagePath},#{imageType},0)
     </insert>
 
     <!--变量顺序要和数据库的一致,插入动态评论、回复-->
@@ -96,7 +96,7 @@
     </select>
 
 
-    <select id="selectTopicMapList" parameterType="java.lang.String" resultType="java.util.HashMap">
+    <select id="selectTopicMapList" parameterType="java.lang.String" resultType="java.util.Map">
         SELECT t.subject_id,tc1.user_id,tc1.comment_time,u1.user_name ,
         tc1.reply_times,tc1.like_times,tc1.share_times
         ,tc1.content
@@ -105,10 +105,10 @@
         where #subject_id= #{subjectID}
         and tc1.user_id=u1.user_id
         and t.topic_id =tc1.topic_id and t.topic_id =ti.topic_id
-        and comment_time BETWEEN #{sinceTime} and  #{nowTime}
+        and tc1.comment_time BETWEEN #{sinceTime} and  #{nowTime}
     </select>
 
-<select id="selectTopicCommentList" parameterType="java.lang.String" resultType="java.util.HashMap">
+<select id="selectTopicCommentList" parameterType="java.lang.String" resultType="java.util.Map">
     SELECT rc1.resource_comment_id,rc1.comment_type,rc1.comment_time,u1.user_name ,
     rc1.user_id
     ,rc1.reply_times,rc1.like_times,rc1.share_times

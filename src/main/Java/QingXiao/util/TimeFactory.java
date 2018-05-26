@@ -17,6 +17,12 @@ public class TimeFactory {
         return current;
     }
 
+    public static String getCurrentDate() {
+        String current = new SimpleDateFormat("yyyy-MM-dd").format( new Date());
+        System.out.println("当前日期：" + current);
+        return current;
+    }
+
     /*
  获取用户注册的时间,即当前时刻系统的时间。
  */
