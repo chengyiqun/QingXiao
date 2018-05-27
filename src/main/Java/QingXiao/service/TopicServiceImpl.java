@@ -173,20 +173,12 @@ public class TopicServiceImpl implements  TopicService {
     public List<Topic> getTopicList(String jsonString) {
         HashMap map = (HashMap) JSON.parseObject(jsonString,Map.class);
         String subjectID =(String)map.get("subjectID");
-        String uploadTime =(String)map.get("uploadTime");
         String sinceTime =(String)map.get("sinceTime");
         String nowTime =(String)map.get("nowTime");
-        // List<Map> list = courseResourceMapper.selectCourseResourceByCourseName(courseName);
-        String courseResourceID="";
         if(!subjectID.equals("")){
-            //courseResourceID=courseResourceMapper.selectCourseResourceIDByResourceStoreName(resourceStoreName);
+            System.out.println("主题ID不为空");
         }
-
-        List<Topic> topicList= new LinkedList<>();
-
-        System.out.println("主题ID不为空");
-        //list = courseResourceMapper.selectCourseResourceByCourseID(courseID);
-        //list = topicMapper.selectTopicList(subjectID,sinceTime,nowTime);
+        List<Topic> topicList;
         topicList = topicMapper.selectTopicList(subjectID,sinceTime,nowTime);
         System.out.println("动态信息List:" + topicList);
         return topicList;
