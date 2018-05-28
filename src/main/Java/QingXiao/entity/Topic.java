@@ -8,6 +8,8 @@ import java.util.List;
 public class Topic {
     String topicID;
     String userID;
+
+    String avatarStoreName;
     String userName;  // 添加的字段
     String subjectID;
     String topicTime;
@@ -21,6 +23,14 @@ public class Topic {
     int status;
    private List<TopicComment>  topicCommentList;
    private List<TopicImage> topicImageList;
+
+    public String getAvatarStoreName() {
+        return avatarStoreName;
+    }
+
+    public void setAvatarStoreName(String avatarStoreName) {
+        this.avatarStoreName = avatarStoreName;
+    }
 
     public String getTopicID() {
         return topicID;
@@ -147,6 +157,7 @@ public class Topic {
         return "Topic{" +
                 "topicID='" + topicID + '\'' +
                 ", userID='" + userID + '\'' +
+                ", avatarStoreName='" + avatarStoreName + '\'' +
                 ", userName='" + userName + '\'' +
                 ", subjectID='" + subjectID + '\'' +
                 ", topicTime='" + topicTime + '\'' +
@@ -158,8 +169,8 @@ public class Topic {
                 ", browseTimes=" + browseTimes +
                 ", dontMaskStranger=" + dontMaskStranger +
                 ", status=" + status +
-                ", topicCommentList=" + topicCommentList +
-                ", topicImageList=" + topicImageList +
+                ", topicCommentList=" + topicCommentList.toString() +
+                ", topicImageList=" + topicImageList.toString() +
                 '}';
     }
 }

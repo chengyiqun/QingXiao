@@ -19,10 +19,11 @@ public interface TopicMapper {
     void insertTopicComment(HashMap hashMap);
     void insertLable(HashMap hashMap);
     List<Map> selectTopicMapList(@Param("subjectID")String subjectID,@Param("sinceTime")String sinceTime,@Param("nowTime") String nowTime);
-    List<Topic> selectTopicList(@Param("subjectID")String subjectID, @Param("sinceTime")String sinceTime, @Param("nowTime") String nowTime);
+    List<Topic> selectTopicList(@Param("startItem")int startItem);
     List<Reply> selectReplyList(@Param("commentID")String commentID, @Param("sinceTime")String sinceTime, @Param("nowTime") String nowTime);
 
-    List<Map> selectTopicCommentList(@Param("topicName")String topicName,@Param("sinceTime")String sinceTime,@Param("nowTime") String nowTime);
+    List<Map> selectTopicCommentList(@Param("topicID")String topicID,@Param("sinceTime")String sinceTime,@Param("nowTime") String nowTime);
+    void updateTopicReplys(String topicID);
     void updateTopicCommentReplys(String topicID);
     String  selectRootComment(String objectID);
 }

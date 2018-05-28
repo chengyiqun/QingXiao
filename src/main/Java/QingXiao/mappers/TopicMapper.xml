@@ -29,11 +29,11 @@
         insert into topic_comment  (comment_id,topic_id,user_id,
         comment_type,root_comment,comment_time,
         object_id,to_user_id,like_times,reply_times,share_times,
-        content,score,status)
+        content,status)
         values (#{commentID},#{topicID},#{userID},
         #{commentType},#{rootComment},#{commentTime},
-        #{objectID},#{toUserID},#{likeTimes},#{replyTimes},#{shareTimes},
-        #{content},#{score},#{status})
+        #{objectID},#{toUserID},0,0,0,
+        #{content},0)
     </insert>
 
     <!--变量顺序要和数据库的一致,插入标签-->
@@ -45,6 +45,11 @@
         #{lable},#{lableTime},#{lbleType},
         #{objectID},#{status})
     </insert>
+
+    <!--更新动态评论数-->
+    <update id="updateTopicReplys" parameterType="java.lang.String" >
+        UPDATE topic SET  comment_times =comment_times+1   where topic_id= #{topicID}
+    </update>
 
 <!--更新动态评论的回复数-->
 <update id="updateTopicCommentReplys" parameterType="java.lang.String" >
@@ -61,21 +66,28 @@
     SELECT * FROM  topic_comment   where user_id= #{userID} and comment_time BETWEEN #{sinceTime} and  #{nowTime}
 </select>
 
-    <select id="selectTopicList" parameterType="java.lang.String" resultMap="TopicMap">
-        SELECT t.subject_id,t.topic_id t_topic_id ,t.content t_content,  t.user_id t_user_id,t.topic_time,
-        tc1.user_id tc1_user_id,tc1.topic_id tc1_topic_id ,tc1.comment_time,tc1.comment_id tc1_comment_id,
-        u1.user_name u1_username,
-        u2.user_name u2_username, u3.user_name u3_username,
-        tc1.reply_times,tc1.like_times,tc1.share_times
-        ,tc1.content  tc1_content ,ti.image_path,ti.topic_id ti_topic_id
-        FROM  topic as t ,topic_comment as tc1,topic_comment as tc2,
-        user_inform u1,user_inform u2,user_inform u3,topic_image as ti
-        where t.subject_id= #{subjectID}
-        and tc1.user_id=u2.user_id  and tc1.to_user_id = u3.user_id
-        and t.topic_id =tc1.topic_id and t.topic_id =ti.topic_id
-        and t.user_id = u1.user_id
-        and t.topic_time BETWEEN #{sinceTime} and  #{nowTime}
-        and tc1.comment_type = 0
+    <select id="selectTopicList" parameterType="int" resultMap="TopicMap">
+        SELECT t.subject_id,t.topic_id t_topic_id ,t.content t_content,t.comment_times,t.user_id t_user_id,t.topic_time,
+            tc1.user_id tc1_user_id,tc1.topic_id tc1_topic_id ,tc1.comment_time,tc1.comment_id tc1_comment_id,
+            u1.user_name u1_username,
+            u1.avatar_store_name,
+            u2.user_name u2_username, u3.user_name u3_username,
+            tc1.reply_times,tc1.like_times,tc1.share_times,
+            tc1.content  tc1_content ,ti.image_path,ti.topic_id ti_topic_id,image_id
+        FROM  user_inform u1,
+            topic as t
+            left join topic_comment as tc1 on t.topic_id=tc1.topic_id
+            left join user_inform as u2 on tc1.user_id=u2.user_id and tc1.comment_type = 0
+            left join user_inform as u3 on tc1.to_user_id = u3.user_id
+            left join topic_image as ti on t.topic_id =ti.topic_id
+        where
+
+            t.topic_id in (select t2.topic_id from(select topic.topic_id from topic order by topic_time desc limit #{startItem},10) as t2)
+
+            and t.user_id = u1.user_id
+
+        order by topic_time desc
+
     </select>
 
     <select id="selectReplyList" parameterType="java.lang.String" resultMap="ReplyMap">
@@ -108,18 +120,38 @@
         and tc1.comment_time BETWEEN #{sinceTime} and  #{nowTime}
     </select>
 
-<select id="selectTopicCommentList" parameterType="java.lang.String" resultType="java.util.Map">
-    SELECT rc1.resource_comment_id,rc1.comment_type,rc1.comment_time,u1.user_name ,
-    rc1.user_id
-    ,rc1.reply_times,rc1.like_times,rc1.share_times
-    ,rc1.content
-    FROM  resource_comment as rc1,
-    course_resource,user_inform u1
-    where resource_store_name= #{resourceStoreName}
-    and rc1.user_id=u1.user_id
-    and course_resource.course_resource_id =rc1.course_resource_id
+<select id="selectTopicCommentList" parameterType="java.lang.String" resultMap="TopicCommentMap">
+    SELECT
+        tc1.comment_id,
+        tc1.comment_type,
+        tc1.comment_time,
+        u1.user_name,
+        u1.avatar_store_name,
+        tc1.user_id,
+        tc1.reply_times,
+        tc1.like_times,
+        tc1.share_times,
+        tc1.content
+    FROM topic_comment as tc1,
+        user_inform u1
+    where tc1.topic_id = #{topicID}
+          and tc1.user_id = u1.user_id
+          and comment_type = 0
     and comment_time BETWEEN #{sinceTime} and  #{nowTime}
+    order by comment_time desc
 </select>
+    <resultMap type="QingXiao.entity.TopicCommentListBean" id="TopicCommentMap">
+        <id property="commentID" column="comment_id"/>
+        <result property="commentTime" column="comment_time"/>
+        <result property="commentType" column="comment_type"/>
+        <result property="userName" column="user_name"/>
+        <result property="userID" column="user_id"/>
+        <result property="likeTimes" column="like_times"/>
+        <result property="replyTimes" column="reply_times"/>
+        <result property="content" column="content"/>
+        <result property="shareTimes" column="share_times"/>
+        <result property="avatarStoreName" column="avatar_store_name"/>
+    </resultMap>
 
 <select id="selectTopicCommentReplyList" parameterType="java.lang.String" resultType="java.util.HashMap">
     SELECT rc1.resource_comment_id,rc1.comment_type,rc1.comment_time,
@@ -148,10 +180,12 @@
         <result property="subjectID"  column="subject_id"/>
         <result property="topicTime" column="topic_time"/>
         <result property="content"  column="t_content"/>
+        <result property="commentTimes"  column="comment_times"/>
 
         <result property="topicPlace" column="topic_place"/>
         <result property="userID"  column="t_user_id"/>
         <result property="userName" column="u1_username"/>
+        <result property="avatarStoreName" column="avatar_store_name"/>
         <collection property="topicCommentList" ofType="QingXiao.entity.TopicComment">
             <id property="commentID" column="tc1_comment_id"/>
             <result property="topicID" column="tc1_topic_id"/>
@@ -160,7 +194,7 @@
             <result property="toUserName" column="u3_username"/>
             <result property="content" column="tc1_content"/>
             <result property="commentTime" column="comment_time"/>
-            <result property="score" column="score"/>
+            <result property="content" column="content"/>
 
         </collection>
         <collection property="topicImageList" ofType="QingXiao.entity.TopicImage">
@@ -180,7 +214,7 @@
         <result property="userID" column="tc1_user_id"/>
         <result property="content" column="tc1_content"/>
         <result property="commentTime" column="comment_time"/>
-        <result property="score" column="score"/>
+        <result property="content" column="content"/>
        -->
     <resultMap type="QingXiao.entity.Reply" id="ReplyMap">
         <id property="commentID" column="tc3_comment_id"/>
@@ -190,7 +224,7 @@
         <result property="userID" column="tc3_user_id"/>
         <result property="content" column="tc3_content"/>
         <result property="commentTime" column="tc3_comment_time"/>
-        <result property="score" column="tc3_score"/>
+        <result property="content" column="tc3_score"/>
         <collection property="topicCommentList" ofType="QingXiao.entity.TopicComment">
             <id property="commentID" column="tc1_comment_id"/>
             <result property="topicID" column="tc1_topic_id"/>
@@ -200,7 +234,7 @@
             <result property="content" column="tc1_content"/>
             <result property="toContent" column="tc1_to_content"/>
             <result property="commentTime" column="tc1_comment_time"/>
-            <result property="score" column="score"/>
+            <result property="content" column="content"/>
 
         </collection>
     </resultMap>

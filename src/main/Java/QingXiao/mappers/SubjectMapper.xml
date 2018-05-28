@@ -68,7 +68,7 @@
             <result property="userID" column="user_id"/>
             <result property="content" column="content"/>
             <result property="commentTime" column="comment_time"/>
-            <result property="score" column="score"/>
+            <result property="content" column="content"/>
             <association property="userInform"  javaType="QingXiao.entity.UserInform">
                 <id property="userID" column="user_id"/>
                 <result property="userName" column="user_name"/>

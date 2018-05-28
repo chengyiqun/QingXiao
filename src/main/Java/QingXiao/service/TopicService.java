@@ -18,7 +18,7 @@ public interface TopicService {
 
     List<Map> getTopicMapList(String jsonString);
 
-    List<Topic> getTopicList(String jsonString);
+    List<Topic> getTopicList(int page);
 
     List<Map> getTopicCommentList(String jsonString);
 

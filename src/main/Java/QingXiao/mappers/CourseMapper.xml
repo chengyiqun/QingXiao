@@ -48,9 +48,9 @@
     <insert id="insertStudentCourseAllMap" parameterType="java.util.HashMap">
         insert into student_course (student_course_id,teach_id,user_id,choose_course_date,
         grade_point,resit_rebuild_tag,
-        score,status) values (#{studentCourseID},#{teachID},#{userID},#{chooseCourseTime},
+        content,status) values (#{studentCourseID},#{teachID},#{userID},#{chooseCourseTime},
         #{gradePoint},#{resitRebuildTag},
-        #{score},#{status})
+        #{content},#{status})
     </insert>
     <!--学生选课实体检查通过教学ID，用户ID确定唯一性。 -->
     <select id="selectStudentCourseID" parameterType="java.lang.String" resultType="java.lang.String">

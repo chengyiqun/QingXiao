@@ -8,7 +8,7 @@
         insert into resource_comment  (resource_comment_id,course_resource_id,
         comment_type,root_comment,
         object_id,to_user_id,user_id,comment_time,
-       content,score,status)
+       content,content,status)
        values (#{resourceCommentID},#{courseResourceID},
        #{commentType},#{rootComment},
        #{objectID},#{toUserID},#{userID},#{commentTime},
@@ -25,7 +25,7 @@
 
     <!--获取课程资源实体评价信息, 直接通过courseResourceID确定,同时还要把userID转换成userName-->
     <select id="selectResourceCommentByResourceID" parameterType="java.lang.String" resultType="java.util.HashMap">
-        SELECT  comment_time,content,score  FROM  resource_comment   where course_resource_id= #{courseResourceID} and comment_time BETWEEN #{sinceTime} and  #{nowTime}
+        SELECT  comment_time,content,content  FROM  resource_comment   where course_resource_id= #{courseResourceID} and comment_time BETWEEN #{sinceTime} and  #{nowTime}
     </select>
 
     <!--通过UserID查询某个用户对课程资源实体的评价 -->
@@ -54,7 +54,7 @@
         rc1.resource_comment_id rc1_comment_id,u1.user_name u1_username,
              u1.avatar_store_name,
         u2.user_name u2_username,rc1.like_times,rc1.share_times
-        ,rc1.content  rc1_content ,rc1.score  rc1_score ,
+        ,rc1.content  rc1_content ,rc1.content  rc1_score ,
         rc2.content rc1_to_content,  cr.user_id  cr_user_id ,
 
         cr.course_id cr_course_id,cr.resource_describe cr_resource_describe,
@@ -121,7 +121,7 @@
             <result property="userID" column="user_id"/>
             <result property="content" column="content"/>
             <result property="commentTime" column="comment_time"/>
-            <result property="score" column="score"/>
+            <result property="content" column="content"/>
             <association property="userInform"  javaType="QingXiao.entity.UserInform">
                 <id property="userID" column="user_id"/>
                 <result property="userName" column="user_name"/>
@@ -148,7 +148,7 @@
             <result property="content" column="rc1_content"/>
             <result property="toContent" column="rc1_to_content"/>
             <result property="commentTime" column="rc1_comment_time"/>
-            <result property="score" column="rc1_score"/>
+            <result property="content" column="rc1_score"/>
         </collection>
     </resultMap>
     <!-- 使用resultMap映射实体类和字段之间的一一对应关系,ReplyMap  -->
@@ -160,7 +160,7 @@
         <result property="userID" column="rc3_user_id"/>
         <result property="content" column="rc3_content"/>
         <result property="commentTime" column="rc3_comment_time"/>
-        <result property="score" column="rc3_score"/>
+        <result property="content" column="rc3_score"/>
         <collection property="topicCommentList" ofType="QingXiao.entity.TopicComment">
             <id property="commentID" column="rc1_comment_id"/>
             <result property="topicID" column="rc1_course_resource_id"/>
@@ -170,7 +170,7 @@
             <result property="content" column="rc1_content"/>
             <result property="toContent" column="rc1_to_content"/>
             <result property="commentTime" column="rc1_comment_time"/>
-            <result property="score" column="rc1_score"/>
+            <result property="content" column="rc1_score"/>
         </collection>
     </resultMap>
 

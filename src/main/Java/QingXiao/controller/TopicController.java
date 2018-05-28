@@ -9,6 +9,7 @@ import QingXiao.util.FileOperator;
 import QingXiao.util.IdFactory;
 import QingXiao.util.TimeFactory;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -60,7 +61,8 @@ public class TopicController {
                     System.out.println("上传课程资源请求file为" + mf);
                     String pathRoot = request.getSession().getServletContext().getRealPath("");
                     System.out.println("上传文件根路径为："+pathRoot);
-                    String path = pathRoot + FileOperator.TOPIC_PICTURE+"\\"+TimeFactory.getCurrentDate()+"\\";
+                    String webAppPath= FileOperator.TOPIC_PICTURE+"\\"+TimeFactory.getCurrentDate()+"\\";
+                    String path = pathRoot + webAppPath;
                     System.out.println("上传动态图片请求文件的路径：" + path);
                     String resourceName = mf.getOriginalFilename();
                     String picOrder = resourceName.substring(0,1);
@@ -83,7 +85,7 @@ public class TopicController {
                         if (!jsonStringInsertTopic.equals("")) {  // 判断字符串是否为空
                             System.out.println("开始上传动态图片的jsonString不为空" + jsonStringInsertTopic);
                             HashMap<String, Object> imageMap = new HashMap<>();
-                            imageMap.put("imagePath", filePath);
+                            imageMap.put("imagePath", webAppPath+resourceStoreName);
                             imageMap.put("fileName", "file");
                             imageMap.put("picOrder", picOrder);
                             imageMap.put("imageType", 1);
@@ -230,40 +232,35 @@ public class TopicController {
      */
     @RequestMapping(value = "/GetTopicList", method = RequestMethod.POST)
     @ResponseBody
-    public String getTopicList(HttpServletRequest request) throws IllegalStateException, IOException {
-        System.out.println("动态list请求为" + request);
+    public String getTopicList(int page,HttpServletRequest request) throws IllegalStateException, IOException {
+        System.out.println("动态list页码是" + page);
         Map<String, Object> resultMap = new HashMap<>();
-        HashMap<String, Object> mapType = new HashMap<>();
         BufferedReader br = request.getReader();
-
-        System.out.println("获取动态list请求流：" + br);
         String userName = request.getHeader("userName");
         userName = URLDecoder.decode(userName, "UTF-8");
         String accessToken = request.getHeader("accessToken");
         System.out.println("获取动态list请求头信息userName：" + userName);
         System.out.println("获取动态list请求头信息accessToken：" + accessToken);
-        String str;
-        StringBuilder jsonString = new StringBuilder();
-        while ((str = br.readLine()) != null) {
-            jsonString.append(str);
-            System.out.println("str为" + str);
-        }
+
+
         String resultString = "";
-        System.out.println("111获取动态list请求流：" + jsonString);
         System.out.println("Token验证结果：" + userService.verifyAccessToken(userName, accessToken));
         if (userService.verifyAccessToken(userName, accessToken) == 4001) {
             //List<Map> list = topicService.getTopicMapList(jsonString);
             //resultString = JSON.toJSONString(list);
-            List<Topic> topicList = topicService.getTopicList(jsonString.toString());
+            List<Topic> topicList = topicService.getTopicList(page);
             resultString = JSON.toJSONString(topicList);
+            result = 3421;
         } else {
             result = 3004;
             // resultMap.put("result",3004);  //token验证失败，重新登录
         }
-        resultMap.put("result", result);
 
-        System.out.println("动态result：" + resultString);
-        return resultString;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("result", result);
+        jsonObject.put("resultString", resultString);
+        System.out.println(jsonObject.toJSONString());
+        return jsonObject.toString();
     }
 
 
@@ -333,14 +330,16 @@ public class TopicController {
         if (userService.verifyAccessToken(userName, accessToken) == 4001) {
             List<Map> list = topicService.getTopicCommentList(jsonString.toString());
             resultString = JSON.toJSONString(list);
+            result = 3451;
         } else {
             result = 3004;
             // resultMap.put("result",3004);  //token验证失败，重新登录
         }
-        resultMap.put("result", result);
-
-        System.out.println("result：" + resultString);
-        return resultString;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("result", result);
+        jsonObject.put("commentList", resultString);
+        System.out.println(jsonObject);
+        return jsonObject.toString();
     }
 
     /*

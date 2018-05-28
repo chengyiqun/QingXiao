@@ -111,6 +111,7 @@ public class TopicServiceImpl implements  TopicService {
         if(commentType ==0){
             System.out.println("此条是评论");
             topicID=(String) commentMap.get("topicID");
+            topicMapper.updateTopicReplys(topicID);
         }else if(commentType ==1){  //回复
             System.out.println("此条是回复");
             objectID = (String)commentMap.get("objectID");
@@ -170,16 +171,10 @@ public class TopicServiceImpl implements  TopicService {
     }
 
     @Override
-    public List<Topic> getTopicList(String jsonString) {
-        HashMap map = (HashMap) JSON.parseObject(jsonString,Map.class);
-        String subjectID =(String)map.get("subjectID");
-        String sinceTime =(String)map.get("sinceTime");
-        String nowTime =(String)map.get("nowTime");
-        if(!subjectID.equals("")){
-            System.out.println("主题ID不为空");
-        }
+    public List<Topic> getTopicList(int page) {
+        int startItem = (page - 1) * 10;
         List<Topic> topicList;
-        topicList = topicMapper.selectTopicList(subjectID,sinceTime,nowTime);
+        topicList = topicMapper.selectTopicList(startItem);
         System.out.println("动态信息List:" + topicList);
         return topicList;
     }
@@ -194,11 +189,12 @@ public class TopicServiceImpl implements  TopicService {
         // List<Map> list = courseResourceMapper.selectCourseResourceByCourseName(courseName);
         String courseResourceID="";
         if(!topicID.equals("")){
+            System.out.println("动态ID不为空");
             //courseResourceID=courseResourceMapper.selectCourseResourceIDByResourceStoreName(resourceStoreName);
         }
         List<Map> list= new LinkedList<>();
         //if(courseResourceID!=null) {
-        System.out.println("动态ID不为空");
+
         //list = courseResourceMapper.selectCourseResourceByCourseID(courseID);
         list = topicMapper.selectTopicCommentList(topicID,sinceTime,nowTime);
         System.out.println("动态评论信息List:" + list);

@@ -63,6 +63,20 @@
     <url-pattern>*.jpg</url-pattern>
   </servlet-mapping>
 
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.png</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.PNG</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.JPG</url-pattern>
+  </servlet-mapping>
 
   <welcome-file-list>
     <welcome-file>/index.jsp</welcome-file>
