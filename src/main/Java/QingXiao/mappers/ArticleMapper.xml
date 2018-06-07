@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QingXiao.mappers.ArticleMapper">
+    <resultMap type="QingXiao.entity.Article" id="ArticleMapper">
+        <id property="userID" column="user_id" />
+        <result property="userName" column="user_name" />
+        <result property="password" column="password" />
+    </resultMap>
+
+    <resultMap type="QingXiao.entity.Article" id="ArticleMap">
+        <id property="articleID" column="article_id" />
+        <result property="title" column="title" />
+        <result property="author" column="author" />
+        <result property="authorID" column="author_id" />
+        <result property="summary" column="summary" />
+        <result property="content" column="content" />
+        <result property="lable" column="lable" />
+        <result property="releaseTime" column="release_time" />
+        <result property="path" column="path" />
+        <result property="commentTimes" column="comment_times" />
+        <result property="likeTimes" column="like_times" />
+        <result property="collectTime" column="collect_times" />
+        <result property="shareTime" column="share_times" />
+        <result property="privileges" column="privileges" />
+        <result property="status" column="status" />
+    </resultMap>
+
+    <select id="selectArticleInfo" parameterType="java.lang.String" resultMap="ArticleMap">
+        SELECT  *
+        FROM  article_table
+        where
+        article_id = #{articleID}
+    </select>
+
+    <insert id="insertArticleAllMap" parameterType="java.util.HashMap">
+        insert into article_table(article_id,title,author,author_id,summary,
+        content,lable,release_time,path,comment_times,like_times,collect_times,
+        share_times,privileges,status)
+        values (#{articleID},#{title},#{author},#{authorID},#{summary},
+        #{content},#{lable},#{releaseTime},#{path},#{commentTime},#{likeTime},#{collectTime},
+        #{shareTime},#{privileges},#{status})
+    </insert>
+
+    <select id="selectArticleList" parameterType="java.lang.String" resultType="java.util.HashMap">
+        SELECT  *
+        FROM  article_table
+        where
+        release_time BETWEEN #{sinceTime} and  #{nowTime}
+    </select>
+
+
+    <delete id="deleteArticle" parameterType="java.lang.String" >
+        update article_table  set status = 0 where article_id= #{articleID}
+    </delete>
+
+    <select id="selectArticleListWithMap" parameterType="java.lang.String" resultMap="ArticleMap">
+        SELECT  *
+        FROM  article_table
+        where  release_time BETWEEN #{sinceTime} and  #{nowTime}
+    </select>
+    <!-- 使用resultMap映射实体类和字段之间的一一对应关系,ReplyMap  -->
+    <resultMap type="QingXiao.entity.ArticleList" id="ArticleListMap">
+        <id property="commentID" column="rc3_comment_id"/>
+        <result property="result" column="result"/>
+        <result property="count" column="count"/>
+        <collection property="ArticleList" ofType="QingXiao.entity.Article">
+            <id property="commentID" column="rc1_comment_id"/>
+            <result property="articleID" column="article_id"/>
+            <result property="title" column="title"/>
+            <result property="author" column="author"/>
+            <result property="authorID" column="author_id"/>
+            <result property="content" column="content"/>
+            <result property="summary" column="summary"/>
+            <result property="commentTimes" column="comment_times"/>
+            <result property="releaseTime" column="release_time"/>
+        </collection>
+    </resultMap>
+
+
+</mapper>
+

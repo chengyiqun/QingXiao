@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Classic editor</h1>
+<div name="content" id="editor">
+    <p>This is some sample content.</p>
+
+</div>
+<script src="../build/ckeditor.js"></script>
+<button onclick="print_content()">content</button>
+<script>
+
+    //  上传适配器，格式官网上有，以一种Promise 的方式。Promise好像是有阻塞的意思在里面。
+    class UploadAdapter {
+        constructor(loader) {
+            this.loader = loader;
+        }
+        upload() {
+            return new Promise((resolve, reject) => {
+                const data = new FormData();
+            data.append('upload', this.loader.file);
+            data.append('allowSize', 10);//允许图片上传的大小/兆
+            $.ajax({
+                url: '/QingXiao/Article/uploadArticleImage4',
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    console.log( "------999999-----" );
+                    console.log(data.res);
+                    console.log( data.url );
+                    console.log( "------6666-----" );
+                    if (data.res) {
+                        resolve({
+                            default: data.url
+                        });
+                    } else {
+                        reject(data.msg);
+                    }
+
+                }
+            });
+
+        });
+        }
+        abort() {
+        }
+    }
+
+    ClassicEditor
+        .create( document.querySelector( '#editor' ), {
+            language:"zh-cn"
+        })
+        .then( editor => {
+        //const toolbarContainer = document.querySelector( '#editor' );
+       // toolbarContainer.appendChild( editor.ui.view.toolbar.element );
+            console.log( "------6666666-----" );
+            console.log( "------6666-----" );
+    // 这个地方加载了适配器
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader)=>{
+        return new UploadAdapter(loader);
+    };
+            const view = new FileDialogButtonView( locale );
+            view.on( 'done', ( evt, files ) => {
+                for ( const file of files ) {
+                    console.log( 'Selected file', file );
+                }
+                loader.upload()
+            });
+
+    } )
+    .catch( error => {
+        console.error( error );
+    } );
+</script>
+
+
+</body>
+</html>

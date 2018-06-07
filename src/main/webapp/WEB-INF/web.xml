@@ -16,6 +16,10 @@
   </context-param>
 
 
+  <context-param>
+    <param-name>log4jConfigLocation</param-name>
+    <param-value>classpath:log4j.properties</param-value>
+  </context-param>
 
   <!-- 编码过滤器 -->
   <filter>
@@ -30,6 +34,36 @@
     <filter-name>encodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+
+  <!--wEditor编辑器上传图片跨域请求过滤-->
+  <filter>
+    <filter-name>HttpRequestAndResponseFilter</filter-name>
+    <filter-class>QingXiao.filter.HttpRequestAndResponseFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>utf8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>HttpRequestAndResponseFilter</filter-name>
+    <url-pattern>/Article/uploadArticleImage3</url-pattern>
+  </filter-mapping>
+  <!--登录验证过滤器-->
+  <filter>
+    <filter-name>LoginFilter</filter-name>
+    <filter-class>QingXiao.filter.LoginFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>utf8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>LoginFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+
   <!-- spring监听器 -->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -77,9 +111,29 @@
     <servlet-name>default</servlet-name>
     <url-pattern>*.JPG</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <!-- 拦截所有*.do 的请求,交给DispatcherServlet处理,性能最好 -->
+    <url-pattern>*.js</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.woff</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.ttf</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.html</url-pattern>
+  </servlet-mapping>
 
   <welcome-file-list>
-    <welcome-file>/index.jsp</welcome-file>
+    <welcome-file>/login.jsp</welcome-file>
   </welcome-file-list>
   <!-- session配置 -->
   <session-config>

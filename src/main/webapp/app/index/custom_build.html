@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CKEditor 5 - Classic editor</title>
+
+    <style>
+        body {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .input_title{
+            border: 1px solid #ccc;
+            height: 50px;
+            width: 100% ;
+        }
+        .text {
+            border: 1px solid #ccc;
+            min-height:400px;
+            height: auto;
+            width: 100% ;
+
+
+        }
+        .outDiv {
+            height: 100%;
+            width: 60% ;
+            margin-left:auto;margin-right:auto;
+
+        }
+    </style>
+
+</head>
+<body>
+<h1>Classic editor</h1>
+
+<div id="divContainer" class="outDiv">
+    <button id="btn1">获取html</button>
+    <button id="btn2">获取text</button>
+    <button id="btn_save">保存</button>
+    <button id="btn_publish">发布</button>
+    <button id="btn_preview">预览</button>
+    <input type="text" id="input_title"  class="input_title" value="">
+    <div name="content" id="editor">
+        <p></p>
+    </div>
+</div>
+<button onclick="print_content()">content</button>
+<script src="../build/custom_ckeditor/translations/zh-cn.js"></script>
+<script src="./ckeditor.js"></script>
+<script>
+    var data;
+    ClassicEditor.create(document.querySelector('#editor'), {
+        language: 'zh-cn',
+            ckfinder: {
+                //uploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
+                //uploadUrl: 'http://localhost/QingXiao/Article/uploadArticleImage2'
+                uploadUrl: '/QingXiao/Article/uploadArticleImage2'
+            }
+        }
+    ).then(editor => {
+        window.editor = editor;
+    console.log('wwwwwwww');
+    console.log(editor);
+    data = editor.getData();
+    console.log(data);
+
+    //editor.setData( '<p>Some text.</p>' );
+    //const data1 = editor.getData();
+    //console.log( data1 );
+    // window.editor.execute('underline');
+    console.log('eeeeeeeee');
+    //console.log( editor );
+    } )
+    .catch(error => {
+        console.log(error);
+    } );
+
+    function print_content() {
+        var data = editor.getData();
+        console.log(data);
+    }
+    document.getElementById('btn1').addEventListener('click', function () {
+        // 读取 html
+        alert( editor.getData())
+    }, false)
+
+    document.getElementById('btn2').addEventListener('click', function () {
+        // 读取 text
+        alert( editor.getData())
+    }, false)
+
+    document.getElementById('btn_save').addEventListener('click', function () {
+        // 上传编写的文档
+        console.log(data);
+        var formData = new FormData();
+        var title = document.getElementById("input_title").value;
+        formData.append("author", "YongZhang");
+        formData.append("title", title);
+        formData.append("content",  editor.getData());
+        var html_content=editor.getData();
+        var txtcontent = html_content.replaceAll("</?[^>]+>", ""); //剔出<html>的标签
+        txtcontent = txtcontent.replaceAll("<a>\\s*|\t|\r|\n</a>", "");//去除字符串中的空格,回车,换行符,制表符
+        formData.append("summary",  editor.getData().substr(0,186));
+
+        console.log('截取文章开头内容：'+ editor.getData().substr(0,186));
+        var request = new XMLHttpRequest();
+        request.open("POST", "http://60.205.218.103/QingXiao/Article/uploadArticle");
+        request.send(formData);
+        alert( editor.getData())
+    }, false)
+
+    //Var ClassicEditor editor;
+    //editor.execute('underline');
+    //Array.from( editor.ui.componentFactory.names() );
+
+</script>
+</body>
+</html>

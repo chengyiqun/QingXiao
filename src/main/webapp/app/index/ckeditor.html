@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CKEditor 5 - Classic editor</title>
+
+    <style>
+        body {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+    </style>
+
+</head>
+<body>
+<h1>Classic editor</h1>
+<div name="content" id="editor">
+    <p>This is some sample content.</p>
+
+</div>
+<script src="./ckeditor.js"></script>
+<button onclick="print_content()">content</button>
+<script>
+    var data;
+    ClassicEditor.create(document.querySelector('#editor'), {
+            ckfinder: {
+                //uploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
+                uploadUrl: 'http://localhost/QingXiao/Article/uploadArticleImage2'
+            }
+        }
+    ).
+    then(editor => {
+        window.editor = editor;
+        console.log('wwwwwwww');
+        console.log(editor);
+        data = editor.getData();
+        console.log(data);
+
+        //editor.setData( '<p>Some text.</p>' );
+        //const data1 = editor.getData();
+        //console.log( data1 );
+        // window.editor.execute('underline');
+        console.log('eeeeeeeee');
+        //console.log( editor );
+    } )
+        .catch(error => {
+            console.log(error);
+        } )
+    ;
+
+    function print_content() {
+        var data = editor.getData();
+        console.log(data);
+    }
+
+
+    //Var ClassicEditor editor;
+    //editor.execute('underline');
+    //Array.from( editor.ui.componentFactory.names() );
+
+</script>
+</body>
+</html>

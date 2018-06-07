@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>编辑文章</title>
+    <style type="text/css">
+        #exp-a{height:150px; background:#CCC}
+        .div_style { height: 100%;width: 100%}
+        html,body{
+            height:100%;
+
+        }
+        .toolbar {
+            border: 1px solid #ccc;
+            width: 100% ;
+
+        }
+        .input_title{
+            border: 1px solid #ccc;
+            height: 50px;
+            width: 100% ;
+        }
+        .text {
+            border: 1px solid #ccc;
+            min-height:400px;
+            height: auto;
+            width: 100% ;
+
+
+        }
+        .outDiv {
+            height: 100%;
+            width: 60% ;
+            margin-left:auto;margin-right:auto;
+
+        }
+
+    </style>
+</head>
+
+
+
+
+
+<body >
+
+<div id="divContainer" class="outDiv">
+    <button id="btn1">获取html</button>
+    <button id="btn2">获取text</button>
+    <button id="btn_save">保存</button>
+    <button id="btn_publish">发布</button>
+    <button id="btn_preview">预览</button>
+    <input type="text" id="input_title"  class="input_title" value="">
+    <div id="div1" class="toolbar">
+    </div>
+    <div id="div2" class="text"  > <!--可使用 min-height 实现编辑区域自动增加高度-->
+        <p>请输入内容</p>
+    </div>
+
+</div>
+
+
+<!-- 注意， 只需要引用 JS，无需引用任何 CSS ！！！-->
+<script type="text/javascript" src="../build/release/wangEditor.js"></script>
+<script type="text/javascript">
+    var E = window.wangEditor
+    var editor = new E('#div1', '#div2')
+    // 或者 var editor = new E( document.getElementById('editor') )
+    //editor.customConfig.zIndex = 10
+    editor.customConfig.uploadImgMaxSize = 20 * 1024 * 1024;//设置图片大小为20M
+    editor.customConfig.uploadImgTimeout = 1000000; //图片上传超时限制10s
+    //editor.customConfig.uploadImgServer = 'http://localhost/QingXiao/Article/uploadArticleImage'  //上传图片到服务器
+    editor.customConfig.uploadImgServer = '/QingXiao/Article/uploadArticleImage3'  // 上传图片到服务器
+    console.log('开始上传！');
+    editor.create();
+
+    // 开启编辑功能
+    //editor.$textElem.attr('contenteditable', true)
+
+    document.getElementById('btn1').addEventListener('click', function () {
+        // 读取 html
+        alert(editor.txt.html())
+    }, false)
+
+    document.getElementById('btn2').addEventListener('click', function () {
+        // 读取 text
+        alert(editor.txt.text())
+    }, false)
+
+    document.getElementById('btn_save').addEventListener('click', function () {
+        // 上传编写的文档
+        var formData = new FormData();
+        var title = document.getElementById("input_title").value;
+        formData.append("author", "YongZhang");
+        formData.append("title", title);
+        formData.append("content", editor.txt.html());
+        formData.append("summary", editor.txt.text().substr(0,186));
+        console.log('截取文章开头内容：'+editor.txt.text().substr(0,186));
+        var request = new XMLHttpRequest();
+        request.open("POST", "http://60.205.218.103/QingXiao/Article/uploadArticle");
+        request.send(formData);
+        alert(editor.txt.text())
+    }, false)
+</script>
+</body>
+</html>

@@ -24,5 +24,9 @@ public class statusCode {
     * */
     public  static int TOKEN_ERROR=3004;
     public  static int UPDATE_AVATAR_SUCCESS=3005;
+    /*
+     * 域名全局变量
+     * */
 
+    public  static String DOMAIN="www.qingxiao.xin";
 }
