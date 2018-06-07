@@ -16,6 +16,7 @@ public interface UserService {
 
     HashMap downloadAvatar(String userName);
 
+    int changeName(String userName,String newName);
     int deleteUser(String userName);
     int updatePassword(String userName, String password);
     HashMap login(String phoneNum, String passWord);

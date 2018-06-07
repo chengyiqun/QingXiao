@@ -40,7 +40,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public GetCourseResult insertCourse(String listJson, String userName) {
         //String listJson="";
-        //System.out.println("上传课程jsonstring为"+listJson);
+        System.out.println("上传课程jsonstring为"+listJson);
         List<Map> list1 = JSON.parseArray(listJson, Map.class);
         for (Map map : list1) {
 
@@ -104,14 +104,14 @@ public class CourseServiceImpl implements CourseService {
 
             String userID = userInformMapper.queryUserIDByUserName(userName);
             if (userID != null) {
-                //System.out.println("userID不为空");
+                System.out.println("userID不为空");
                 String courseID = courseMapper.selectCourseIDByCourseName(courseName);
                 if (courseID == null) {
-                    //System.out.println("courseID为空");
+                    System.out.println("courseID为空");
                     courseID = IdFactory.getUUID();
                     courseMap.put("courseID", courseID);
                     courseMapper.insertCourseAllMap(courseMap);
-                    //System.out.println("插入课程信息成功");
+                    System.out.println("插入课程信息成功");
                 } else {
                     System.out.println("courseID null");
                 }
@@ -157,9 +157,9 @@ public class CourseServiceImpl implements CourseService {
                 result = 3003;
             }
         }
-
-
-        return new GetCourseResult(result, list1);
+       GetCourseResult result0=new GetCourseResult(result, list1);
+        System.out.println("QQQQQQQ"+result0);
+        return result0;
 
     }
 }

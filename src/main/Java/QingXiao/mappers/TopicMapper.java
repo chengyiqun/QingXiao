@@ -3,6 +3,7 @@ package QingXiao.mappers;
 import QingXiao.entity.CourseResource;
 import QingXiao.entity.Reply;
 import QingXiao.entity.Topic;
+import QingXiao.entity.TopicCommentReplay;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
@@ -20,7 +21,7 @@ public interface TopicMapper {
     void insertLable(HashMap hashMap);
     List<Map> selectTopicMapList(@Param("subjectID")String subjectID,@Param("sinceTime")String sinceTime,@Param("nowTime") String nowTime);
     List<Topic> selectTopicList(@Param("startItem")int startItem);
-    List<Reply> selectReplyList(@Param("commentID")String commentID, @Param("sinceTime")String sinceTime, @Param("nowTime") String nowTime);
+    List<TopicCommentReplay> selectReplyList(@Param("commentID")String commentID, @Param("sinceTime")String sinceTime, @Param("nowTime") String nowTime);
 
     List<Map> selectTopicCommentList(@Param("topicID")String topicID,@Param("sinceTime")String sinceTime,@Param("nowTime") String nowTime);
     void updateTopicReplys(String topicID);

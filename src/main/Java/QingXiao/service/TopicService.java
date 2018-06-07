@@ -1,7 +1,7 @@
 package QingXiao.service;
 
-import QingXiao.entity.Reply;
 import QingXiao.entity.Topic;
+import QingXiao.entity.TopicCommentReplay;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,5 +22,5 @@ public interface TopicService {
 
     List<Map> getTopicCommentList(String jsonString);
 
-    List<Reply> getTopicCommentReplyList(String jsonString);
+    List<TopicCommentReplay> getTopicCommentReplyList(String jsonString);
 }

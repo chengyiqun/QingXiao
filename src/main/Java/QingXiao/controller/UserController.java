@@ -193,7 +193,31 @@ public class UserController {
 
     }
 
+    @RequestMapping(value = "/changeName", method = RequestMethod.POST)
+    @ResponseBody
+    public String changeName(String newName,HttpServletRequest request)throws Exception{
+        String newNameDecoded=URLDecoder.decode(newName, "UTF-8");
+        int result = 0;
+        String userName = request.getHeader("userName");
+        String accessToken = request.getHeader("accessToken");
+        System.out.println("获取更改昵称请求头信息userName：" + userName);
+        System.out.println("获取更改昵称请求头信息accessToken：" + accessToken);
+        userName = URLDecoder.decode(userName, "UTF-8");
+        int tokenResult = userService.verifyAccessToken(userName, accessToken);
+        System.out.println("Token验证结果：" + tokenResult);
+        if (tokenResult == 3004) {
+            System.out.println("tokenError");
+            result = 3004;
+        }else {
+            System.out.println(newNameDecoded);
+            result = userService.changeName(userName,newNameDecoded);
+        }
 
+        JSONObject jsonObject = new JSONObject();
+        System.out.println(jsonObject.toString());
+        jsonObject.put("result", result);
+        return jsonObject.toString();
+    }
     /*
      *采用spring提供的上传文件的方法,更改用户头像
      */

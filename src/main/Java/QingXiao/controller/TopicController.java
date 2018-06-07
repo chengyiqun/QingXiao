@@ -2,6 +2,7 @@ package QingXiao.controller;
 
 import QingXiao.entity.Reply;
 import QingXiao.entity.Topic;
+import QingXiao.entity.TopicCommentReplay;
 import QingXiao.service.TeachCommentService;
 import QingXiao.service.TopicService;
 import QingXiao.service.UserService;
@@ -369,16 +370,18 @@ public class TopicController {
         System.out.println("111获取课程资源评论list请求流：" + jsonString);
         System.out.println("Token验证结果：" + userService.verifyAccessToken(userName, accessToken));
         if (userService.verifyAccessToken(userName, accessToken) == 4001) {
-            List<Reply> list = topicService.getTopicCommentReplyList(jsonString.toString());
+            List<TopicCommentReplay> list = topicService.getTopicCommentReplyList(jsonString.toString());
             resultString = JSON.toJSONString(list);
+            result = 3461;
         } else {
             result = 3004;
             // resultMap.put("result",3004);  //token验证失败，重新登录
         }
-        resultMap.put("result", result);
-
-        System.out.println("result：" + resultString);
-        return resultString;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("result", result);
+        jsonObject.put("resultString", resultString);
+        System.out.println(jsonObject.toString());
+        return jsonObject.toString();
     }
 
 }

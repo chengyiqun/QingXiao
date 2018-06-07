@@ -129,8 +129,8 @@ public class UserServiceImpl implements UserService {
             verifyResult = checkcode(phoneNum,zone,identifyCode);
             System.out.println("验证码验证结果："+verifyResult);
             HashMap resultMap = (HashMap) JSON.parseObject(verifyResult,Map.class);
-            if((Integer)resultMap.get("status")==200){
-                //  if(true){
+            //if((Integer)resultMap.get("status")==200){
+                  if(true){
                 System.out.println("验证码验证结果："+verifyResult);
             }else{
               return   result=2002;
@@ -218,6 +218,33 @@ public class UserServiceImpl implements UserService {
         avatarMap=userInformMapper.selectAvatarName(userName);
         return avatarMap;
     }
+
+    @Override
+    public int changeName(String userName,String newName) {
+        int result = 0;
+        System.out.println("改名之前!");
+        String userID= userInformMapper.queryUserIDByUserName(userName);
+        System.out.println("改名之前222!");
+        if ((userID == null)) {
+            System.out.println("用户不存在,非法操作!");
+            return result;
+        }else{
+            System.out.println("用户存在，开始改名!");
+            String newNameID=userInformMapper.queryUserIDByUserName(newName);
+            if (newNameID==null){
+                System.out.println("新用户名不存在，可以改名");
+                userInformMapper.changeName(newName,userID);
+                result = 3007;
+            }else {
+                System.out.println("新用户名已存在");
+                result=3008;
+            }
+
+
+        }
+        return result;
+    }
+
     public int  deleteUser(String userName) {
         System.out.println("删除之前!");
         String userID= userInformMapper.queryUserIDByUserName(userName);

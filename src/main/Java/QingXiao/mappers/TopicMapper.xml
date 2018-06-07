@@ -92,19 +92,21 @@
 
     <select id="selectReplyList" parameterType="java.lang.String" resultMap="ReplyMap">
         SELECT
-        tc1.user_id tc1_user_id,tc1.topic_id tc1_topic_id ,tc1.comment_time tc1_comment_time,
-        tc1.comment_id tc1_comment_id,u1.user_name u1_username,
-        u2.user_name u2_username,tc1.like_times,tc1.share_times
-        ,tc1.content  tc1_content  ,tc2.content  tc1_to_content,
-        tc3.reply_times tc3_reply_times,tc3.comment_id tc3_comment_id,
-        tc3.content  tc3_content,tc3.comment_time  tc3_comment_time
-        FROM  topic_comment as tc1,topic_comment as tc2,topic_comment as tc3,
-        user_inform u1,user_inform u2
+             tc1.user_id tc1_user_id,u1.avatar_store_name,tc1.topic_id tc1_topic_id ,tc1.comment_time tc1_comment_time,
+             tc1.comment_id tc1_comment_id,u1.user_name u1_username,
+             u2.user_name u2_username,u2.user_id u2_user_id,tc1.like_times,tc1.share_times
+            ,tc1.content  tc1_content  ,tc2.content  tc1_to_content,
+             tc1.reply_times tc3_reply_times,tc3.comment_id tc3_comment_id,
+             tc3.content  tc3_content,tc3.comment_time  tc3_comment_time
+        FROM  topic_comment as tc1 left join user_inform as u2 on tc1.to_user_id = u2.user_id,topic_comment as tc2,topic_comment as tc3,
+            user_inform u1
         where tc1.root_comment= #{commentID}  and tc3.comment_id = #{commentID}
-        and tc1.object_id=tc2.comment_id
-        and tc1.user_id=u1.user_id  and tc1.to_user_id = u2.user_id
-        and tc1.comment_time BETWEEN #{sinceTime} and  #{nowTime}
-        and tc1.comment_type = 1
+              and tc1.object_id=tc2.comment_id
+              and tc1.user_id=u1.user_id
+
+              and tc1.comment_time BETWEEN #{sinceTime} and  #{nowTime}
+              and tc1.comment_type = 1
+              order by tc1_comment_time DESC
     </select>
 
 
@@ -216,27 +218,20 @@
         <result property="commentTime" column="comment_time"/>
         <result property="content" column="content"/>
        -->
-    <resultMap type="QingXiao.entity.Reply" id="ReplyMap">
-        <id property="commentID" column="tc3_comment_id"/>
-        <result property="replyTimes" column="tc3_reply_times"/>
+    <resultMap type="QingXiao.entity.TopicCommentReplay" id="ReplyMap">
+        <id property="commentID" column="tc1_comment_id"/>
+        <result property="userID" column="tc1_user_id"/>
+        <result property="avatar_store_name" column="avatar_store_name"/>
+        <result property="topicID" column="tc1_topic_id"/>
+        <result property="commentTime" column="tc1_comment_time"/>
         <result property="userName" column="u1_username"/>
-        <result property="topicID" column="tc3_topic_id"/>
-        <result property="userID" column="tc3_user_id"/>
-        <result property="content" column="tc3_content"/>
-        <result property="commentTime" column="tc3_comment_time"/>
-        <result property="content" column="tc3_score"/>
-        <collection property="topicCommentList" ofType="QingXiao.entity.TopicComment">
-            <id property="commentID" column="tc1_comment_id"/>
-            <result property="topicID" column="tc1_topic_id"/>
-            <result property="userID" column="tc1_user_id"/>
-            <result property="userName" column="u1_username"/>
-            <result property="toUserName" column="u2_username"/>
-            <result property="content" column="tc1_content"/>
-            <result property="toContent" column="tc1_to_content"/>
-            <result property="commentTime" column="tc1_comment_time"/>
-            <result property="content" column="content"/>
-
-        </collection>
+        <result property="toUserName" column="u2_username"/>
+        <result property="toUserID" column="u2_user_id"/>
+        <result property="likeTimes" column="like_times"/>
+        <result property="shareTimes" column="share_times"/>
+        <result property="content" column="tc1_content"/>
+        <result property="toContent" column="tc1_to_content"/>
+        <result property="replyTimes" column="tc3_reply_times"/>
     </resultMap>
 
 

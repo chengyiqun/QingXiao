@@ -19,11 +19,12 @@ public interface UserInformMapper {
  String  queryPasswordByUserID(String userID);
  //void  insertUser(@Param("ID") int id, @Param("USERNAME") String username,@Param("PASSWORD") String password);
  List<UserInform> findAll();
- void  insertUser(@Param("userID") String id, @Param("userName") String username, @Param("password") String password);
+ void  insertUser(@Param("userID") String id,  String username, @Param("password") String password);
  void  insertUserAuto(@Param("userName") String username, @Param("password") String password);
 
- void deleteUser(String id);
- void updatePassword(@Param("userID") String id, @Param("password") String passWord);
+ void changeName(@Param("newName")String newName, @Param("userID")String id);
+ void deleteUser(@Param("userID")String id);
+ void updatePassword( String id, @Param("password") String passWord);
  /*
     mybatis 查询语句似乎不支持重载
     */

@@ -1,7 +1,7 @@
 package QingXiao.service;
 
-import QingXiao.entity.Reply;
 import QingXiao.entity.Topic;
+import QingXiao.entity.TopicCommentReplay;
 import QingXiao.mappers.SubjectMapper;
 import QingXiao.mappers.TopicMapper;
 import QingXiao.mappers.UserInformMapper;
@@ -141,7 +141,12 @@ public class TopicServiceImpl implements  TopicService {
                 //教学评论信息已上传导入到数据库
                 topicMapper.insertTopicComment(commentMap);
                 //topicMapper.updateTopicComments(teachID);
-                result=3431;
+
+                if (commentType == 1) {
+                    result = 3441;//插入动态评论的回复
+                }else {
+                    result=3431;//插入动态评论
+                }
             }
 
         }else{
@@ -205,13 +210,13 @@ public class TopicServiceImpl implements  TopicService {
 
 
     @Override
-    public List<Reply> getTopicCommentReplyList(String jsonString) {
+    public List<TopicCommentReplay> getTopicCommentReplyList(String jsonString) {
         HashMap map = (HashMap) JSON.parseObject(jsonString,Map.class);
         String commentID =(String)map.get("commentID");
         String uploadTime =(String)map.get("uploadTime");
         String sinceTime =(String)map.get("sinceTime");
         String nowTime =(String)map.get("nowTime");
-        List<Reply> list= new LinkedList<>();
+        List<TopicCommentReplay> list= new LinkedList<>();
         if(commentID!=null) {
             System.out.println("动态评论ID不为空");
             //list = courseResourceMapper.selectCourseResourceByCourseID(courseID);

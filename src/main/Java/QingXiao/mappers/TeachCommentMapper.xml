@@ -6,10 +6,10 @@
     <!--变量顺序要和数据库的一致-->
     <insert id="insertTeachCommentAllMap" parameterType="java.util.HashMap">
         insert into teach_comment(teach_comment_id,teach_id,user_id,
-        comment_type,root_comment,object_id,to_user_id,content,
+        comment_type,root_comment,object_id,to_user_id,
         content,comment_time,is_anonymous,status,comment_times)
       values (#{teachCommentID},#{teachID},#{userID},
-          #{commentType},#{rootComment},#{objectID},#{toUserID},#{content},
+          #{commentType},#{rootComment},#{objectID},#{toUserID},
         #{content},#{commentTime},#{isAnonymous},0,0)
     </insert>
 

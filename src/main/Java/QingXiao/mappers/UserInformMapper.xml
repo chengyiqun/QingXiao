@@ -107,6 +107,10 @@ values (#{userID},#{studentID},#{realName},#{userName},
         update user_inform set avatar_store_name = #{avatarStoreName} ,
         avatar_real_name = #{avatarRealName} where user_name= #{userName}
     </update>
+    <update id="changeName" parameterType="java.lang.String">
+        update user_inform set user_name = #{newName}
+        where user_id = #{userID}
+    </update>
 
     <select id="selectAvatarName" parameterType="java.lang.String" resultType="java.util.HashMap">
         SELECT avatar,avatar_store_name,avatar_real_name FROM  user_inform   where user_name= #{userName}
