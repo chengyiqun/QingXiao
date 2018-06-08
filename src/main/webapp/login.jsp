@@ -116,17 +116,5 @@
     }, false)
 
     </script>
-<%
-    out.println("<td align=left width=290>"+66666666+"</td>");
-    Cookie[] cookies=request.getCookies();
-    for(int i=0;i < cookies.length;i++){
-        if(cookies[i].getName().toString().equals("username")){
-            //console.log("返回cookie数据："+cookies[i].getValue());
-            System.out.println(cookies[i].getValue());
-            //out.print(cookies[i].getValue());
-           // out.print("66666");
-        }
-    }
-%>
 </body>
 </html>

@@ -47,7 +47,17 @@ public class LoginFilter implements Filter {
             System.out.println("111开始拦截过滤");
 
             //先判断路径，如果是index/index.jsp，则直接返回到登录页
-            if(requestURI.contains("/login.jsp")||requestURI.contains("/register.jsp")||requestURI.contains(".css")||requestURI.contains(".js")||requestURI.contains(".jpg")||requestURI.contains("/LoginWeb")||requestURI.contains("/Register")){
+            if(requestURI.contains("/login.jsp")
+                    || requestURI.contains("/register.jsp")
+                    ||requestURI.contains(".css")
+                    ||requestURI.contains(".js")
+                    ||requestURI.contains(".jpg")
+                    ||requestURI.contains("/LoginWeb")
+                    ||requestURI.contains("/Register")
+                    ||requestURI.contains(".ico")
+                    ||requestURI.contains(".ttf")
+                    ||requestURI.contains(".woff")
+                    ||requestURI.contains(".woff2")){
                 System.out.println("转到请求页" );
                 filterChain.doFilter(request, response);
                 return;
