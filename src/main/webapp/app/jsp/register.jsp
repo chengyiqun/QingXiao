@@ -34,6 +34,10 @@
                     <input class="form-control required" type="text" placeholder="Username" id="username" name="username" autofocus="autofocus" maxlength="20"/>
                 </div>
                 <div class="form-group">
+                    <input class="form-control  col-sm-6" type="text" placeholder="验证码" id="verifyCode" name="verifyCode" maxlength="4"/>
+                    <input class="form-control  col-sm-6" type="button" id="getVerifyCode" value="免费获取验证码" onclick="settime(this)" />
+                </div>
+                <div class="form-group">
                     <i class="fa fa-lock fa-lg"></i>
                     <input class="form-control required" type="password" placeholder="Password" id="password" name="password" maxlength="8"/>
                 </div>
@@ -49,16 +53,106 @@
         </div>
     </div>
 </div>
+<script language="javascript" type="text/javascript">
+    function checkMobile(str) {
+        if(str==""){
+            alert("手机号不能为空！");
+        }else{
+            var re = /^1\d{10}$/                          //      以1开始后面加10位数字
+            if (re.test(str)) {
+                alert("正确");
+            } else {
+                alert("手机号格式错误！");
+            }
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    var countdown=60;
+    function settime(obj) {
+        if (countdown == 0) {
+            obj.removeAttribute("disabled");
+            obj.value="免费获取验证码";
+            countdown = 60;
+            return;
+        } else {
+            obj.setAttribute("disabled", true);
+            obj.value="重新发送(" + countdown + ")";
+            countdown--;
+        }
+        setTimeout(function() {
+                settime(obj) }
+            ,1000)
+    }
+
+</script>
 
 <script>
-    document.getElementById('register').addEventListener('click', function () {
+    document.getElementById('getVerifyCode').addEventListener('click', function () {
+        checkMobile(username.value);  // 检查手机号码
+        var formData = new FormData();
+        var username = document.getElementById("username").value;
+        formData.append("phoneNum", username);
+        formData.append("requestType", "Web");
+        var objData = {};
+        //formData.forEach(objData[key] = value);
+        JSON.stringify($('#username').s);
+        for (var entry in formData.entries()){
+            objData[entry[0]] = entry[1];
+            console.log("返回登录结果："+entry[0]);
+            console.log("返回登录结果："+entry[1]);
+        }
+        objData["phoneNum"]=username;
+        objData["requestType"]="Web";
+        $(function () {
+            $.ajax({
+                //url: '/QingXiao/User/Register', // 路径要以QingXiao开头
+                url: '/User/GetVerifyCode', // 路径要以QingXiao开头
+                type: 'POST',
+                data: JSON.stringify(objData),
+                dataType: 'json',
+                contentType: "application/json;charset=utf-8",
+                timeout: 1000,
+                cache: false,
+                async:false, //不是异步处理
+                beforeSend: LoadFunction, //加载执行方法
+                error: erryFunction,  //错误执行方法
+                success: succFunction //成功执行方法
+            });
+            function LoadFunction() {
+                $("#list").html('加载中...');
+            }
+            function erryFunction() {
+                alert("error");
+            }
+            function succFunction(result) {
 
+                console.log("返回发送验证码结果："+result);
+                console.log("返回发送验证码结果："+result["result"]);
+                //var json = eval(result); //数组 "("+s+")"
+                var json = eval(result);
+                console.log("返回发送验证码结果数据json："+json);
+                if (result["result"] == 2001) {
+                    //window.location.href = "../../login.jsp";
+                }else if (result["result"] == 2002){
+                    alert("用户已存在");
+                }
+            }
+        });
+
+    }, false)
+</script>
+<script>
+    document.getElementById('register').addEventListener('click', function () {
+        checkMobile(username.value);  // 检查手机号码
         var formData = new FormData();
         var username = document.getElementById("username").value;
         var password = document.getElementById("password").value;
-        var verificationCode = document.getElementById("username").value;
+        var verificationCode = document.getElementById("verifyCode").value;
         formData.append("phoneNum", username);
         formData.append("password", password);
+        formData.append("verificationCode", verificationCode);
         formData.append("requestType", "Web");
         var objData = {};
         //formData.forEach(objData[key] = value);
@@ -71,6 +165,7 @@
         }
         objData["phoneNum"]=username;
         objData["password"]=password;
+        objData["verificationCode"]=verificationCode;
         objData["requestType"]="Web";
         $(function () {
             $.ajax({
@@ -115,6 +210,8 @@
 
     }, false)
 </script>
+
+
 
 </body>
 </html>

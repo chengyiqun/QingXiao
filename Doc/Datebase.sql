@@ -823,3 +823,38 @@ CREATE TABLE `user_inform` (
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2018-06-07 21:54:38
+
+#（34）文章表
+CREATE TABLE  article_table
+(
+  article_id  CHAR(32) PRIMARY KEY ,
+  title  varchar(140),
+  author  varchar(140),
+  author_id CHAR(32),
+  summary varchar(200),   #文章摘要，提取前86个字。
+  content  varchar(14000),
+  lable  varchar(100),
+  release_time   DATETIME,
+  path  varchar(100),
+  comment_times int,
+  like_times  int,
+  collect_times int,
+  share_times int,
+  privileges SMALLINT,
+  status  SMALLINT,
+  FOREIGN KEY (author_id) REFERENCES user_inform(user_id)
+
+);
+
+CREATE TABLE  verify_code_table
+(
+  verify_code_id  CHAR(32) PRIMARY KEY ,
+  phone_number  char(11),
+  verify_code  char(4),
+  imei    char(17),
+  meid     char(15),
+  lable  varchar(100),
+  send_time   DATETIME,
+  privileges SMALLINT,
+  status  SMALLINT
+);
