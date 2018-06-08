@@ -96,7 +96,7 @@ public class LoginFilter implements Filter {
             }else{
                 System.out.println("No cookie.");
                 response.sendRedirect("http://"+DOMAIN+"/login.jsp");
-                /*response.setHeader("result","1");
+                response.setHeader("result","1");
                 response.addHeader("Content-Type","application/json; charset=utf-8");
                 response.addHeader("Accept-Encoding","gzip");
                 response.setContentType("text/plain;charset=utf-8" );
@@ -107,7 +107,7 @@ public class LoginFilter implements Filter {
                 System.out.println("结果为" + result);
                 PrintWriter printWriter = resp.getWriter();
                 printWriter.write(result);
-                printWriter.close();*/
+                printWriter.close();
                 return;
                 //request.getRequestDispatcher("/QingXiao/app/jsp/login.jsp").forward(request,response);
                // request.getRequestDispatcher("/QingXiao/wEditor.html").forward(request,response);

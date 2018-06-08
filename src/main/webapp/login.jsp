@@ -32,8 +32,9 @@
             <div class="col-md-9">
                 <div class="form-group">
                     <i class="fa fa-user fa-lg"></i>
-                    <input class="form-control required" type="text" placeholder="Username" id="username" name="username" autofocus="autofocus" maxlength="20"/>
+                    <input class="form-control required" type="text" placeholder="Username" id="username" name="username" autofocus="autofocus" maxlength="11"/>
                 </div>
+
                 <div class="form-group">
                     <i class="fa fa-lock fa-lg"></i>
                     <input class="form-control required" type="password" placeholder="Password" id="password" name="password" maxlength="8"/>
@@ -59,8 +60,24 @@
 
     }, false)
 </script>
+<script language="javascript" type="text/javascript">
+function checkMobile(str) {
+    if(str==""){
+        alert("手机号不能为空！");
+    }else{
+        var re = /^1\d{10}$/                          //      以1开始后面加10位数字
+        if (re.test(str)) {
+            alert("正确");
+        } else {
+            alert("手机号格式错误！");
+        }
+    }
+}
+</script>
+
 <script>
     document.getElementById('login').addEventListener('click', function () {
+        checkMobile(username.value);
         var formData = new FormData();
         var username = document.getElementById("username").value;
         var password = document.getElementById("password").value;
@@ -114,7 +131,9 @@
             }
         });
     }, false)
-
     </script>
+
+
+
 </body>
 </html>

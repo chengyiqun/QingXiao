@@ -23,8 +23,10 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Null;
 import java.io.*;
 import java.net.URLDecoder;
@@ -107,6 +109,73 @@ public class UserController {
         //  printWriter.flush();
         printWriter.close();
         //  return result;
+    }
+/*
+    网页端登录实现，获取登录输入流，进行处理，返回登录结果。
+    */
+    @RequestMapping(value = "/LoginWeb",method= RequestMethod.POST)
+    @ResponseBody
+    public JSONObject loginWeb(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        System.out.println("请求为" + req);
+        Map<String, Object> resultMap = new HashMap<>();
+        BufferedReader br = req.getReader();
+        String str, jsonString = "";
+        while((str = br.readLine()) != null){
+            jsonString += str;
+        }
+        System.out.println("登录请求为" + jsonString);
+        // System.out.println("69请求的userName2为" + userName2 + "\n69请求的passWord2为" + passWord2);
+        //loginResult = stuffService.login(userName2, passWord2);
+
+        //map.put("userName",userName);
+        // map.put("passWord",passWord);
+        JSONObject jsonObject= JSONObject.parseObject(jsonString);
+        String phoneNum = (String)jsonObject.get("phoneNum");//不改变
+        String userName= (String)jsonObject.get("userName");//不改变
+        String password = (String) jsonObject.get("password");
+        String requestType= (String) jsonObject.get("requestType");
+        System.out.println("请求的userName为" + userName + "\n请求的passWord为" + password);
+        System.out.println("登录的phoneNum:"+phoneNum);
+        resultMap = userService.login(phoneNum, password);
+        HttpSession session =req.getSession() ;
+
+        if (null != resultMap.get("userID")) {
+            // 设置返回信息
+
+            // 存储Session
+            //session.setAttribute("userId", resultMap.get("userID"));
+            // session.setAttribute("userName", resultMap.get("userName"));
+            //session.setAttribute("privilegeLevel", resultMap.get("userName"));
+        }
+
+
+        /*
+        * Cookie cookie =new  Cookie("time","20080808");// 新建Cookie`
+
+          cookie.setDomain(".helloweenvsfei.com");// 设置域名`
+
+          cookie.setPath("/");// 设置路径`
+
+          cookie.setMaxAge(Integer.MAX_VALUE);// 设置有效期`
+
+          response.addCookie(cookie);// 输出到客户端`
+       */
+        Cookie cookie=new Cookie("username",phoneNum);
+        cookie.setMaxAge(30*24*60*60);//一个小时有效
+        cookie.setPath("/");// 设置路径
+        resp.addCookie(cookie);
+        Cookie cookie2=new Cookie("userType","1");
+        cookie2.setMaxAge(30*24*60*60);//一个小时有效
+        cookie2.setPath("/");// 设置路径
+        resp.addCookie(cookie2);
+
+        //return "redirect:/login.jsp";
+        String result = JSON.toJSONString(resultMap);
+        System.out.println("结果为" + result);
+        JSONObject jsonObject1=new JSONObject();
+        jsonObject1.put("result",resultMap.get("result"));
+        System.out.println("jsonObject1：" + jsonObject1);
+        return jsonObject1;
     }
 
     /*
