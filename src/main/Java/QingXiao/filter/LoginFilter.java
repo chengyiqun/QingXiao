@@ -25,7 +25,6 @@ import static QingXiao.util.statusCode.DOMAIN;
  * 登录验证拦截器，使用的是这一个
  * */
 public class LoginFilter implements Filter {
-
     private FilterConfig filterConfig;
 
     @Override
@@ -64,26 +63,7 @@ public class LoginFilter implements Filter {
                 filterChain.doFilter(request, response);
                 return;
             } else {
-                String userName = request.getHeader("userName");
-                System.out.println("全局拦截器获取更改头像请求头信息userName：" + userName);
-                System.out.println("全局拦截器获取更改头像请求头信息accessToken：" + accessToken);
-                userName = URLDecoder.decode(userName, "UTF-8");
-                /*if (userService.verifyAccessToken(userName, accessToken) == 4001) {
-                    System.out.println("全局拦截器验证Token成功");
-                    filterChain.doFilter(request, response);
-                    return;
-                } else {
-                    System.out.println("全局拦截器验证Token过气了");
-                    response.addHeader("Content-Type", "application/json; charset=utf-8");
-                    response.addHeader("Accept-Encoding", "gzip");
-                    response.setContentType("text/plain;charset=utf-8");
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("result", 3004);
-                    PrintWriter printWriter = resp.getWriter();
-                    printWriter.write(jsonObject.toString());
-                    printWriter.close();
-                    return;
-                }*/
+                System.out.println("请求头不为空，跳转到");
             }
         } else {//是网页端访问的
             //先判断路径，如果是index/index.jsp，则直接返回到登录页
@@ -94,6 +74,7 @@ public class LoginFilter implements Filter {
                     || requestURI.contains(".jpg")
                     || requestURI.contains("/LoginWeb")
                     || requestURI.contains("/Register")
+                    ||requestURI.contains("/GetVerifyCode")
                     || requestURI.contains(".ico")
                     || requestURI.contains(".ttf")
                     || requestURI.contains(".woff")
