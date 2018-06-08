@@ -2,11 +2,10 @@ package QingXiao.service;
 
 import QingXiao.entity.UserInform;
 import QingXiao.mappers.UserInformMapper;
-import QingXiao.util.IdFactory;
-import QingXiao.util.JwtHelper;
-import QingXiao.util.MobClient;
-import QingXiao.util.TimeFactory;
+import QingXiao.util.*;
 import com.alibaba.fastjson.JSON;
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
+import com.aliyuncs.exceptions.ClientException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -25,6 +24,8 @@ import java.security.cert.X509Certificate;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static QingXiao.util.AliyunSendMessage.sendSms;
 
 /**
  * Created by xpb on 2017/9/22.
@@ -54,7 +55,29 @@ public class UserServiceImpl implements UserService {
         List<UserInform> list=userInformMapper.findAll();
         return list;
     }
-
+    /*
+    *
+    * */
+    public  int getVerifyCode(String phoneNumber) {
+        HashMap map = new HashMap();
+        String verifyCodeID=IdFactory.getUUID();
+        String sendTime=TimeFactory.getCurrentTime();
+        int flag = new Random().nextInt(8999);
+        flag=flag+1000;
+        String verifyCode=""+flag;
+        System.out.println("验证码："+verifyCode);
+        try {
+            SendSmsResponse response = AliyunSendMessage.sendSms(phoneNumber,verifyCode);
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        map.put("verifyCodeID",verifyCodeID);
+        map.put("verifyCode",verifyCode);
+        map.put("sendTime",sendTime);
+        map.put("phoneNumber",phoneNumber);
+        userInformMapper.insertVerifyCode(map);
+        return result=2009;
+    }
     public HashMap login(String phoneNum, String password) {
         Connection connection = null;
         HashMap map = new HashMap();
@@ -103,7 +126,6 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-
         map.put("result",result);
         System.out.println("登录返回结果："+map);
         return map;
@@ -122,22 +144,20 @@ public class UserServiceImpl implements UserService {
         String  phoneNum=(String)infoMap.get("phoneNum");
         String  password=(String)infoMap.get("password");
         String  identifyCode=(String)infoMap.get("identifyCode");
+        String verifyCode=userInformMapper.selectVerifyCodeByPhoneNumber(phoneNum);
         String  zone=(String)infoMap.get("zone");
         System.out.println("注册之前!!!!"+userName);
-        String verifyResult = null;
-        try {
-            verifyResult = checkcode(phoneNum,zone,identifyCode);
-            System.out.println("验证码验证结果："+verifyResult);
-            HashMap resultMap = (HashMap) JSON.parseObject(verifyResult,Map.class);
-            //if((Integer)resultMap.get("status")==200){
-                  if(true){
-                System.out.println("验证码验证结果："+verifyResult);
+        //String verifyResult = null;
+        //verifyResult = checkcode(phoneNum,zone,identifyCode);
+        //System.out.println("验证码验证结果："+verifyResult);
+        //HashMap resultMap = (HashMap) JSON.parseObject(verifyResult,Map.class);
+           if(verifyCode.equals(identifyCode)){
+                  //if(true){
+                System.out.println("验证码正确！");
             }else{
               return   result=2002;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         //String userID=userInformMapper.queryUserIDByUserName( userName);
         String userID=userInformMapper.queryUserIDByPhoneNum(phoneNum);
         System.out.println("注册之前222!");

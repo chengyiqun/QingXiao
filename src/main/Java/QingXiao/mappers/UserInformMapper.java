@@ -42,4 +42,6 @@ public interface UserInformMapper {
  void updateAvatarName(@Param("avatarStoreName")String avatarStoreName ,@Param("avatarRealName")String avatarRealName,@Param("userName") String userName);
  HashMap selectAvatarName (@Param("userName") String userName);
 
+ void insertVerifyCode(HashMap verifyCodeMap);
+ String selectVerifyCodeByPhoneNumber(@Param("phoneNumber")String phoneNumber);
 }

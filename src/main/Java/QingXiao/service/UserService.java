@@ -11,7 +11,7 @@ import java.util.List;
 public interface UserService {
 
     List<UserInform> findAll();
-
+    int getVerifyCode(String phoneNumber);
     void updateAvatar(String avatar, String phoneNum, String avatarRealName, String avatarStoreName);
 
     HashMap downloadAvatar(String userName);

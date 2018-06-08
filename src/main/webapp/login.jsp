@@ -77,9 +77,9 @@ function checkMobile(str) {
 
 <script>
     document.getElementById('login').addEventListener('click', function () {
-        checkMobile(username.value);
-        var formData = new FormData();
         var username = document.getElementById("username").value;
+        checkMobile(username);
+        var formData = new FormData();
         var password = document.getElementById("password").value;
         var verificationCode = document.getElementById("username").value;
         formData.append("phoneNum", "username");

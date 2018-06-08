@@ -90,9 +90,9 @@
 
 <script>
     document.getElementById('getVerifyCode').addEventListener('click', function () {
-        checkMobile(username.value);  // 检查手机号码
-        var formData = new FormData();
         var username = document.getElementById("username").value;
+        checkMobile(username);  // 检查手机号码
+        var formData = new FormData();
         formData.append("phoneNum", username);
         formData.append("requestType", "Web");
         var objData = {};
@@ -129,13 +129,16 @@
             function succFunction(result) {
 
                 console.log("返回发送验证码结果："+result);
-                console.log("返回发送验证码结果："+result["result"]);
+                console.log("返回发送验证码结果1："+result["result"]);
+                console.log("返回发送验证码结果2："+result.result);
                 //var json = eval(result); //数组 "("+s+")"
-                var json = eval(result);
-                console.log("返回发送验证码结果数据json："+json);
-                if (result["result"] == 2001) {
+                var json1 = eval("("+result+")"); // data的值是json字符串，这行把字符串转成object
+                console.log("返回发送验证码结果数据json1："+json1.result);
+                //var json = eval(result);
+                console.log("返回发送验证码结果数据json1："+json1);
+                if (json1.result == 2009) {
                     //window.location.href = "../../login.jsp";
-                }else if (result["result"] == 2002){
+                }else if (json1.result == 2008){
                     alert("用户已存在");
                 }
             }
@@ -145,14 +148,14 @@
 </script>
 <script>
     document.getElementById('register').addEventListener('click', function () {
-        checkMobile(username.value);  // 检查手机号码
-        var formData = new FormData();
         var username = document.getElementById("username").value;
+        checkMobile(username);  // 检查手机号码
+        var formData = new FormData();
         var password = document.getElementById("password").value;
-        var verificationCode = document.getElementById("verifyCode").value;
+        var identifyCode = document.getElementById("verifyCode").value;
         formData.append("phoneNum", username);
         formData.append("password", password);
-        formData.append("verificationCode", verificationCode);
+        formData.append("identifyCode", identifyCode);
         formData.append("requestType", "Web");
         var objData = {};
         //formData.forEach(objData[key] = value);
@@ -165,7 +168,7 @@
         }
         objData["phoneNum"]=username;
         objData["password"]=password;
-        objData["verificationCode"]=verificationCode;
+        objData["identifyCode"]=identifyCode;
         objData["requestType"]="Web";
         $(function () {
             $.ajax({

@@ -55,7 +55,38 @@ public class UserController {
         return String.valueOf(list);
     }
 
+    @RequestMapping(value = "/GetVerifyCode", method = RequestMethod.POST)
+    @ResponseBody
+    public String getVerifyCode(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        System.out.println("请求为" + req);
+        System.out.println("请求Service为" + userService);
+        HashMap resultMap;
+        BufferedReader br = req.getReader();
+        System.out.println("获取请求流：" + br);
 
+        String str;
+        StringBuilder jsonString = new StringBuilder();
+        while ((str = br.readLine()) != null) {
+            jsonString.append(str);
+            System.out.println("str为" + str);
+        }
+        System.out.println(jsonString);
+        System.out.println("请求为" + jsonString);
+        JSONObject jsonObject = JSONObject.parseObject(jsonString.toString());
+        String phoneNum = (String) jsonObject.get("phoneNum");//不改变
+        //String password = (String) jsonObject.get("password");
+        System.out.println("请求的phoneNum为" + phoneNum );
+        int result =0;
+        result  = userService.getVerifyCode(phoneNum);
+        System.out.println("结果为" + result);
+
+        System.out.println(" result结果为" + result);
+         //String result1=result+"";
+        JSONObject jsonObject1 = new JSONObject();
+        System.out.println(jsonObject.toString());
+        jsonObject1.put("result", result);
+        return jsonObject1.toString();
+    }
     /*
     登录实现，获取登录输入流，进行处理，返回登录结果。
    返回Token,外加用户头像，性别等基本信息。

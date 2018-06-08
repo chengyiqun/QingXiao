@@ -15,6 +15,8 @@
         <result property="avatarRealName" column="avatar_real_name" />
     </resultMap>
 
+
+
     <!-- 使用resultMap映射实体类和字段之间的一一对应关系,UserInformMapper2  -->
     <resultMap type="QingXiao.entity.UserInform" id="UserInformMapper2">
         <id property="userID" column="user_id"/>
@@ -49,6 +51,14 @@
 
     <select id="findAll" resultMap="UserInformMapper">
         select * from user_inform;
+    </select>
+
+    <insert id="insertVerifyCode" parameterType="java.util.HashMap">
+        insert into verify_code_table (verify_code_id,phone_number,verify_code,send_time)
+        values (#{verifyCodeID},#{phoneNumber},#{verifyCode},#{sendTime})
+    </insert>
+    <select id="selectVerifyCodeByPhoneNumber" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT verify_code FROM  verify_code_table   where phone_number= #{phoneNumber}
     </select>
 
     <insert id="insertUser" parameterType="QingXiao.entity.UserInform">
