@@ -1,0 +1,48 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<ehcache name="shirocache">
+
+    <diskStore path="java.io.tmpdir"/>
+    <!--eternal : 缓存是否永久有效（true/false） true表示缓存永久有效，false表示不为永久有效
+    timeToLiveSeconds : 缓存自创建之时起至失效时的间隔时间单位为秒，
+    默认为0，代表无限长，即缓存永不过期；
+   timeToIdleSeconds : 缓存创建以后，最后一次访问缓存之时至失效之时的时间间隔，
+    单位为秒，默认为0，永不过期；-->
+    <defaultCache
+            maxElementsInMemory="2000"
+            eternal="true"
+            timeToIdleSeconds="0"
+            timeToLiveSeconds="0"
+            overflowToDisk="true"/>
+
+    <cache name="passwordRetryCache"
+           maxElementsInMemory="2000"
+           eternal="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="0"
+           overflowToDisk="false">
+    </cache>
+
+    <cache name="authorizationCache"
+           maxElementsInMemory="2000"
+           eternal="false"
+           timeToIdleSeconds="1800"
+           timeToLiveSeconds="0"
+           overflowToDisk="false">
+    </cache>
+
+    <cache name="authenticationCache"
+           maxElementsInMemory="2000"
+           eternal="false"
+           timeToIdleSeconds="1800"
+           timeToLiveSeconds="0"
+           overflowToDisk="false">
+    </cache>
+
+    <cache name="shiro-activeSessionCache"
+           maxElementsInMemory="2000"
+           eternal="false"
+           timeToIdleSeconds="1800"
+           timeToLiveSeconds="0"
+           overflowToDisk="false">
+    </cache>
+</ehcache>

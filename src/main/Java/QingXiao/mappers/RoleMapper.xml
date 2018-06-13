@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QingXiao.mappers.RoleMapper">
+
+    <resultMap type="QingXiao.entity.Role" id="RoleMapper">
+        <id property="roleID" column="role_id" />
+        <result property="roleName" column="role_name" />
+    </resultMap>
+
+    <select id="queryRoleNameByRoleID" parameterType="java.lang.String" resultType="java.lang.String">
+        select role_name from role_table where role_id= #{roleID}
+    </select>
+    <select id="queryRoleIDByRoleName" parameterType="java.lang.String" resultType="java.lang.String">
+        select role_id from role_table where role_name= #{roleName}
+    </select>
+
+    <insert id="insertRole" parameterType="java.util.HashMap">
+        insert into role_table (role_id,role_name,create_time,privileges,status)
+        values (#{roleID},#{roleName},#{createTime},#{privileges},#{status})
+    </insert>
+
+      <!--根据用户名查询一个用户有几个角色-->
+    <select id="queryRoleNameSetByPhoneNum" parameterType="java.lang.String" resultMap="RoleMap">
+    select ur.user_id u_user_id,r.role_id,r.role_name r_role_name,phone_num,user_name
+    from role_table r,user_role_table ur,user_inform u
+    where  u.phone_num=#{phoneNum} and ur.user_id=u.user_id and  r.role_id=ur.role_id
+    </select>
+
+    <!-- 使用resultMap映射实体类和字段之间的一一对应关系,RoleMap  -->
+    <resultMap type="QingXiao.entity.UserInform" id="RoleMap">
+        <id property="userID" column="u_user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="phoneNum" column="phone_num"/>
+        <collection property="roleList" ofType="QingXiao.entity.Role">
+            <id property="roleID" column="role_id"/>
+            <result property="roleName" column="r_role_name"/>
+        </collection>
+    </resultMap>
+
+
+</mapper>
+

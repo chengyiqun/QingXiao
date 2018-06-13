@@ -2,6 +2,8 @@ package QingXiao.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by xpb on 2017/10/21.
@@ -22,6 +24,7 @@ public class UserInform {
     String entranceTime;
     String userIntroduction ;
     Date registerTime ;
+    List<Role> roleList;
     int  status;
 
 
@@ -223,6 +226,14 @@ public class UserInform {
         this.avatarRealName = avatarRealName;
     }
 
+    public List<Role> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleLsit(List<Role> roleList) {
+        this.roleList = roleList;
+    }
+
     @Override
     public String toString() {
         return "UserInform{" +
@@ -241,6 +252,7 @@ public class UserInform {
                 ", entranceTime='" + entranceTime + '\'' +
                 ", userIntroduction='" + userIntroduction + '\'' +
                 ", registerTime=" + registerTime +
+                ", roleSet=" + roleList +
                 ", status=" + status +
                 ", access_token='" + access_token + '\'' +
                 ", expires_in=" + expires_in +

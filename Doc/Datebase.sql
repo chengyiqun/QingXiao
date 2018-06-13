@@ -845,7 +845,7 @@ CREATE TABLE  article_table
   FOREIGN KEY (author_id) REFERENCES user_inform(user_id)
 
 );
-
+#（35）验证码表
 CREATE TABLE  verify_code_table
 (
   verify_code_id  CHAR(32) PRIMARY KEY ,
@@ -855,6 +855,49 @@ CREATE TABLE  verify_code_table
   meid     char(15),
   lable  varchar(100),
   send_time   DATETIME,
+  privileges SMALLINT,
+  status  SMALLINT
+);
+#（36）角色表
+CREATE TABLE  role_table
+(
+  role_id  CHAR(32) PRIMARY KEY ,
+  role_name  varchar(20),
+  create_time   DATETIME,
+  privileges SMALLINT,
+  status  SMALLINT
+);
+
+#（37）用户角色表
+CREATE TABLE  user_role_table
+(
+  user_role_id  CHAR(32) PRIMARY KEY ,
+  role_id  CHAR(32),
+  user_id  CHAR(32),
+  create_time   DATETIME,
+  privileges SMALLINT,
+  status  SMALLINT
+  #外键参考
+);
+
+#（38）权限表
+CREATE TABLE  privilege_table
+(
+  privilege_id  CHAR(32) PRIMARY KEY ,
+  privilege_name  varchar(20),
+  privilege_father_id  CHAR(32),
+  create_time   DATETIME,
+  privileges SMALLINT,
+  status  SMALLINT
+);
+
+#（39）角色权限表
+CREATE TABLE  role_privilege_table
+(
+  role_privilege_id  CHAR(32) PRIMARY KEY ,
+  privilege_id  CHAR(32),
+  role_id  CHAR(32),
+  create_time   DATETIME,
   privileges SMALLINT,
   status  SMALLINT
 );

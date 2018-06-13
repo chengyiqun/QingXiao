@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QingXiao.mappers.PrivilegeMapper">
+
+    <resultMap type="QingXiao.entity.Privilege" id="PrivilegeMapper">
+        <id property="privilegeID" column="privilege_id" />
+        <result property="privilegeName" column="privilege_name" />
+    </resultMap>
+
+    <select id="queryPrivilegeNameByPrivilegeID" parameterType="java.lang.String" resultType="java.lang.String">
+        select privilege_name from privilege_table where privilege_id= #{privilegeID}
+    </select>
+
+    <insert id="insertPrivilege" parameterType="java.util.HashMap">
+        insert into privilege_table (privilege_id,privilege_name,privilege_father_id,create_time,privileges,status)
+        values (#{privilegeID},#{privilegeName},#{privilegeFatherID},#{createTime},#{privileges},#{status})
+    </insert>
+
+
+
+</mapper>

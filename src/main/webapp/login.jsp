@@ -67,7 +67,7 @@ function checkMobile(str) {
     }else{
         var re = /^1\d{10}$/                          //      以1开始后面加10位数字
         if (re.test(str)) {
-            alert("正确");
+           // alert("正确");
         } else {
             alert("手机号格式错误！");
         }
@@ -92,7 +92,7 @@ function checkMobile(str) {
         $(function () {
             $.ajax({
                 //url: '/QingXiao/User/LoginWeb', // 路径要以QingXiao开头
-                url: '/User/LoginWeb', // 路径要以QingXiao开头
+                url: '/User/LoginWeb1', // 路径要以QingXiao开头
                 type: 'POST',
                 data: JSON.stringify(objData),
                 dataType: 'json',

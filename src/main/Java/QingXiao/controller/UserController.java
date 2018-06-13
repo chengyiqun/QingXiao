@@ -8,6 +8,11 @@ import QingXiao.util.IdFactory;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.FileUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -91,7 +96,6 @@ public class UserController {
     登录实现，获取登录输入流，进行处理，返回登录结果。
    返回Token,外加用户头像，性别等基本信息。
     */
-
     @RequestMapping(value = "/Login", method = RequestMethod.POST)
     public void login(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         System.out.println("请求为" + req);
@@ -141,7 +145,79 @@ public class UserController {
         printWriter.close();
         //  return result;
     }
-/*
+
+    /*
+    网页端登录实现，获取登录输入流，进行处理，返回登录结果。
+    */
+    //@RequiresPermissions( "index" )
+    @RequestMapping(value = "/LoginWeb1",method= RequestMethod.POST)
+    @ResponseBody
+    public JSONObject loginWeb1(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        System.out.println("请求为" + req);
+        Map<String, Object> resultMap = new HashMap<>();
+        BufferedReader br = req.getReader();
+        String str, jsonString = "";
+        while((str = br.readLine()) != null){
+            jsonString += str;
+        }
+        System.out.println("登录请求为" + jsonString);
+        JSONObject jsonObject= JSONObject.parseObject(jsonString);
+        String phoneNum = (String)jsonObject.get("phoneNum");//不改变
+        String userName= (String)jsonObject.get("userName");//不改变
+        String password = (String) jsonObject.get("password");
+        String requestType= (String) jsonObject.get("requestType");
+        System.out.println("请求的userName为" + userName + "\n请求的passWord为" + password);
+        System.out.println("登录的phoneNum:"+phoneNum);
+        resultMap = userService.login(phoneNum, password);
+        HttpSession session =req.getSession() ;
+
+        if (null != resultMap.get("userID")) {
+            // 设置返回信息
+        }
+
+        // 获取主体
+        Subject subject = SecurityUtils.getSubject();
+        try{
+            // 调用安全认证框架的登录方法
+            System.out.println("调用安全处理框架:");
+            subject.login(new UsernamePasswordToken(phoneNum, password,true));
+            System.out.println("验证结束，返回:");
+           // UserInform user = (UserInform) SecurityUtils.getSubject().getPrincipal();
+            //System.out.println("验证结束，返回数据:"+user.toString());
+        }catch(AuthenticationException ex){
+            System.out.println("登陆失败: " + ex.getMessage());
+        }
+
+        /*
+        * Cookie cookie =new  Cookie("time","20080808");// 新建Cookie`
+
+          cookie.setDomain(".helloweenvsfei.com");// 设置域名`
+
+          cookie.setPath("/");// 设置路径`
+
+          cookie.setMaxAge(Integer.MAX_VALUE);// 设置有效期`
+
+          response.addCookie(cookie);// 输出到客户端`
+       */
+        Cookie cookie=new Cookie("username",phoneNum);
+        cookie.setMaxAge(30*24*60*60);//一个小时有效
+        cookie.setPath("/");// 设置路径
+        resp.addCookie(cookie);
+        Cookie cookie2=new Cookie("userType","1");
+        cookie2.setMaxAge(30*24*60*60);//一个小时有效
+        cookie2.setPath("/");// 设置路径
+        resp.addCookie(cookie2);
+
+        //return "redirect:/login.jsp";
+        String result = JSON.toJSONString(resultMap);
+        System.out.println("结果为" + result);
+        JSONObject jsonObject1=new JSONObject();
+        jsonObject1.put("result",resultMap.get("result"));
+        System.out.println("jsonObject1：" + jsonObject1);
+        return jsonObject1;
+    }
+
+    /*
     网页端登录实现，获取登录输入流，进行处理，返回登录结果。
     */
     @RequestMapping(value = "/LoginWeb",method= RequestMethod.POST)
@@ -178,7 +254,6 @@ public class UserController {
             // session.setAttribute("userName", resultMap.get("userName"));
             //session.setAttribute("privilegeLevel", resultMap.get("userName"));
         }
-
 
         /*
         * Cookie cookie =new  Cookie("time","20080808");// 新建Cookie`

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QingXiao.mappers.RolePrivilegeMapper">
+
+    <resultMap type="QingXiao.entity.RolePrivilege" id="RolePrivilegeMapper">
+        <id property="roleID" column="role_id" />
+        <result property="roleName" column="role_name" />
+    </resultMap>
+
+
+
+    <insert id="insertRolePrivilege" parameterType="java.util.HashMap">
+        insert into role_privilege_table (role_privilege_id,privilege_id,role_id,create_time,privileges,status)
+        values (#{rolePrivilegeID},#{privilegeID},#{roleID},#{createTime},#{privileges},#{status})
+    </insert>
+
+
+
+
+</mapper>

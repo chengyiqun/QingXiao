@@ -107,7 +107,7 @@
         </div>
         <div>
             <ul class="nav navbar-nav">
-                <li><a href="../index/rose.html">玫瑰欣赏</a></li>
+                <li><a href="http://www.qingxiao.xin/app/index/rose.html">玫瑰欣赏</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="http://60.205.218.103:80/avatar/1.jpg" class="img-rounded" height="40" width="40">
@@ -230,7 +230,7 @@
 <div id="ICP">
 
 <div style="width:300px;margin:0 auto; padding:20px 0;">
-    <a href=""> <img src="../index/img/police_beian.png"></a>
+    <a href=""> <img src="http://www.qingxiao.xin/app/index/img/police_beian.png"></a>
     <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=34019102000218" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="" style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">皖公网安备 34019102000218号</p></a>
 </div>
 </div>
